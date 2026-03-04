@@ -1,5 +1,9 @@
 report zsbcglib_prog_template.
 
+" SPDX-License-Identifier: Apache-2.0
+" SPDX-FileCopyrightText: 2013-2026 Alexander Tsybulsky
+" Project: SBCG ABAP Library (sbcglib) - https://github.com/sbcgua/sbcglib
+
 include zsbcglib_prog_template_def.
 include zsbcglib_prog_template_data.
 include zsbcglib_prog_template_model1.

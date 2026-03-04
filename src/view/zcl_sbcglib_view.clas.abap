@@ -5,6 +5,11 @@ class zcl_sbcglib_view definition
 
   public section.
 
+    " SPDX-License-Identifier: Apache-2.0
+    " SPDX-FileCopyrightText: 2013-2026 Alexander Tsybulsky
+    " Project: SBCG ABAP Library (sbcglib) - https://github.com/sbcgua/sbcglib
+
+
     " Construction
 
     class-methods create

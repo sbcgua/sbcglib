@@ -5,6 +5,11 @@ class ZCX_SBCGLIB_INTERNAL definition
   create public .
 
 public section.
+
+  " SPDX-License-Identifier: Apache-2.0
+  " SPDX-FileCopyrightText: 2013-2026 Alexander Tsybulsky
+  " Project: SBCG ABAP Library (sbcglib) - https://github.com/sbcgua/sbcglib
+
   type-pools ABAP .
 
   interfaces IF_T100_MESSAGE .

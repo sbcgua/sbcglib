@@ -6,6 +6,11 @@ class ZCX_SBCGLIB_VIEW_ERROR definition
 
 public section.
 
+  " SPDX-License-Identifier: Apache-2.0
+  " SPDX-FileCopyrightText: 2013-2026 Alexander Tsybulsky
+  " Project: SBCG ABAP Library (sbcglib) - https://github.com/sbcgua/sbcglib
+
+
   interfaces IF_T100_MESSAGE .
 
   constants:

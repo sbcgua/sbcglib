@@ -1,6 +1,10 @@
 interface zif_sbcglib_log
   public.
 
+  " SPDX-License-Identifier: Apache-2.0
+  " SPDX-FileCopyrightText: 2013-2026 Alexander Tsybulsky
+  " Project: SBCG ABAP Library (sbcglib) - https://github.com/sbcgua/sbcglib
+
   " TYPES
 
   types:

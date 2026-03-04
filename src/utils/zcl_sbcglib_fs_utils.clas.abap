@@ -5,6 +5,11 @@ class ZCL_SBCGLIB_FS_UTILS definition
 
   public section.
 
+    " SPDX-License-Identifier: Apache-2.0
+    " SPDX-FileCopyrightText: 2013-2026 Alexander Tsybulsky
+    " Project: SBCG ABAP Library (sbcglib) - https://github.com/sbcgua/sbcglib
+
+
     class-data:
       gc_sep type c length 1 read-only.
 

@@ -1,6 +1,10 @@
 interface zif_sbcglib_view_callbacks
   public.
 
+  " SPDX-License-Identifier: Apache-2.0
+  " SPDX-FileCopyrightText: 2013-2026 Alexander Tsybulsky
+  " Project: SBCG ABAP Library (sbcglib) - https://github.com/sbcgua/sbcglib
+
   interfaces zif_sbcglib_view_cmd_handler.
 
   aliases on_user_command
