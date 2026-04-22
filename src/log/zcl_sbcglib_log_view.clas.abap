@@ -202,10 +202,6 @@ CLASS ZCL_SBCGLIB_LOG_VIEW IMPLEMENTATION.
   endmethod.
 
 
-  method zif_sbcglib_view_callbacks~on_user_command.
-  endmethod.
-
-
   method zif_sbcglib_view_callbacks~setup_columns.
 
     data lo_col type ref to cl_salv_column.

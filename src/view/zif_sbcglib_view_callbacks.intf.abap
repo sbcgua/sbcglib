@@ -5,11 +5,6 @@ interface zif_sbcglib_view_callbacks
   " SPDX-FileCopyrightText: 2013-2026 Alexander Tsybulsky
   " Project: SBCG ABAP Library (sbcglib) - https://github.com/sbcgua/sbcglib
 
-  interfaces zif_sbcglib_view_cmd_handler.
-
-  aliases on_user_command
-    for zif_sbcglib_view_cmd_handler~on_user_command.
-
   methods setup_columns
     importing
       !io_columns type ref to cl_salv_columns_table

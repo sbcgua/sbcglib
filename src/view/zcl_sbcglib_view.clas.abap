@@ -463,19 +463,13 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
   method on_alv_user_command.
 
     data lx type ref to cx_root.
-    data li_cmd_handler type ref to zif_sbcglib_view_cmd_handler.
 
-    li_cmd_handler = mi_cmd_handler.
-    if li_cmd_handler is not bound.
-      li_cmd_handler = mi_callbacks.
-      " TODO maybe refactor ... crutchy
-    endif.
-    if li_cmd_handler is not bound.
+    if mi_cmd_handler is not bound.
       return.
     endif.
 
     try.
-      li_cmd_handler->on_user_command(
+      mi_cmd_handler->on_user_command(
         iv_cmd       = e_salv_function
         io_selection = mo_alv->get_selections( ) ).
     catch cx_root into lx.
@@ -602,7 +596,7 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
     data lo_event type ref to cl_salv_events_table.
     lo_event = mo_alv->get_event( ).
 
-    if mi_callbacks is bound or mi_cmd_handler is bound.
+    if mi_cmd_handler is bound.
       set handler on_alv_user_command for lo_event.
     endif.
 

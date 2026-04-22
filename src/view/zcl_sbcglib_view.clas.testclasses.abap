@@ -6,6 +6,7 @@ class ltcl_view_demo definition final
   public section.
 
     interfaces zif_sbcglib_view_callbacks.
+    interfaces zif_sbcglib_view_cmd_handler.
 
   private section.
 
@@ -63,6 +64,7 @@ class ltcl_view_demo implementation.
       it_content = demo_data( )
       iv_title   = 'Demo view'
       iv_technames = abap_true
+      ii_cmd_handler = me
       ii_callbacks = me
     )->hide_fields( 'tech'
     )->set_aggregations( 'amt'
@@ -81,6 +83,7 @@ class ltcl_view_demo implementation.
       it_content = demo_data( )
       iv_title   = 'Demo view'
       iv_technames = abap_true
+      ii_cmd_handler = me
       ii_callbacks = me
     )->hide_fields( 'tech'
     )->set_aggregations( 'amt'
@@ -95,14 +98,14 @@ class ltcl_view_demo implementation.
     message iv_column type 'S'. " For debug only, suppressed in UTs
   endmethod.
 
-  method zif_sbcglib_view_callbacks~on_user_command.
+  method zif_sbcglib_view_callbacks~setup_columns.
+    io_columns->get_column( 'AMT' )->set_currency_column( 'CUR' ).
+  endmethod.
+
+  method zif_sbcglib_view_cmd_handler~on_user_command.
     if iv_cmd = 'XXX'.
       message 'Secret level opened' type 'S'. " For debug only, suppressed in UTs
     endif.
-  endmethod.
-
-  method zif_sbcglib_view_callbacks~setup_columns.
-    io_columns->get_column( 'AMT' )->set_currency_column( 'CUR' ).
   endmethod.
 
 endclass.
