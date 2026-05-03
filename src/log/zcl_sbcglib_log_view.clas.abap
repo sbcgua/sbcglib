@@ -183,17 +183,18 @@ CLASS ZCL_SBCGLIB_LOG_VIEW IMPLEMENTATION.
 *    if is_msg-is_suppressed = abap_true.
 *      rv_icon = icon_no_status.
 
-    if is_msg-msgty = 'E'.
-      rv_icon = icon_led_red.
-    elseif is_msg-msgty = 'W'.
-      rv_icon = icon_led_yellow.
-    elseif is_msg-msgty = 'I'.
-      rv_icon = icon_led_inactive.
-    elseif is_msg-msgty = 'S'.
-      rv_icon = icon_led_green.
-    else.
-      rv_icon = ''.
-    endif.
+    case is_msg-msgty.
+      when 'E'.
+        rv_icon = icon_led_red.
+      when 'W'.
+        rv_icon = icon_led_yellow.
+      when 'I'.
+        rv_icon = icon_led_inactive.
+      when 'S'.
+        rv_icon = icon_led_green.
+      when others.
+        rv_icon = ''.
+    endcase.
 
   endmethod.
 
@@ -220,8 +221,8 @@ CLASS ZCL_SBCGLIB_LOG_VIEW IMPLEMENTATION.
     lo_col->set_medium_text( |{ 'Message'(003) }| ).
 
     lo_col = io_columns->get_column( 'INDEX' ).
-    lo_col->set_short_text( |{ '#' }| ).
-    lo_col->set_medium_text( |{ '#' }| ).
+    lo_col->set_short_text( '#' ).
+    lo_col->set_medium_text( '#' ).
 
   endmethod.
 

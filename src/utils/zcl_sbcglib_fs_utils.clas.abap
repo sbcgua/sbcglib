@@ -10,8 +10,7 @@ class ZCL_SBCGLIB_FS_UTILS definition
     " Project: SBCG ABAP Library (sbcglib) - https://github.com/sbcgua/sbcglib
 
 
-    class-data:
-      gc_sep type c length 1 read-only.
+    class-data gc_sep type c length 1 read-only.
 
     class-methods class_constructor.
     class-methods choose_file_dialog
@@ -243,9 +242,8 @@ CLASS ZCL_SBCGLIB_FS_UTILS IMPLEMENTATION.
 
   method write_file.
 
-    data lv_size   type i.
-    data ls_textid type scx_t100key.
-    data lt_bin    type sdokcntbins.
+    data lv_size type i.
+    data lt_bin  type sdokcntbins.
 
     call function 'SCMS_XSTRING_TO_BINARY'
       exporting

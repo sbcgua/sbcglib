@@ -93,7 +93,7 @@ CLASS ZCL_SBCGLIB_LOG IMPLEMENTATION.
         r_msgty = 'W'.
       when zif_sbcglib_log=>c_severity-info or zif_sbcglib_log=>c_severity-none.
         r_msgty = 'I'.
-      when others.
+      " when others.
         " error ?
     endcase.
 

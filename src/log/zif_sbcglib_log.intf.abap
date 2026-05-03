@@ -18,8 +18,7 @@ interface zif_sbcglib_log
       msgv4 type symsgv,
       index type i,
     end of ty_message.
-  types:
-    tt_messages type standard table of ty_message with key msgid msgno.
+  types tt_messages type standard table of ty_message with key msgid msgno.
 
   types ty_severity type i.
 

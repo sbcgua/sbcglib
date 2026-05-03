@@ -36,10 +36,7 @@
       "severity": "Error"
     },
     "align_parameters": false,
-    "align_pseudo_comments": {
-      "exclude": [],
-      "severity": "Error"
-    },
+    "align_pseudo_comments": false,
     "align_type_expressions": false,
     "allowed_object_naming": {
       "exclude": [],
@@ -119,7 +116,7 @@
       "allowUnused": false
     },
     "check_subrc": {
-      "exclude": [],
+      "exclude": ["\\.testclasses\\.abap$"],
       "severity": "Error",
       "openDataset": true,
       "authorityCheck": true,
@@ -150,8 +147,8 @@
       "ignoreExceptions": true,
       "ignoreLocal": true,
       "ignoreInterfaces": false,
-      "statics": "^G.?_.+$",
-      "instance": "^M.?_.+$",
+      "statics": "^.+$",
+      "instance": "^.+$",
       "constants": ""
     },
     "classic_exceptions_overlap": {
@@ -672,8 +669,8 @@
     "no_public_attributes": {
       "exclude": [],
       "severity": "Error",
-      "allowReadOnly": false,
-      "ignoreTestClasses": false
+      "allowReadOnly": true,
+      "ignoreTestClasses": true
     },
     "no_yoda_conditions": {
       "exclude": [],
@@ -760,10 +757,7 @@
       "loopExtract": true,
       "sortExtract": true
     },
-    "omit_parameter_name": {
-      "exclude": [],
-      "severity": "Error"
-    },
+    "omit_parameter_name": false,
     "omit_preceding_zeros": {
       "exclude": [],
       "severity": "Error"
@@ -869,7 +863,7 @@
     "remove_descriptions": {
       "exclude": [],
       "severity": "Error",
-      "ignoreExceptions": false,
+      "ignoreExceptions": true,
       "ignoreWorkflow": true
     },
     "rfc_error_handling": {
@@ -967,7 +961,7 @@
       "severity": "Error"
     },
     "sy_modification": {
-      "exclude": [],
+      "exclude": ["\\.testclasses\\.abap$"],
       "severity": "Error"
     },
     "tabl_enhancement_category": {
@@ -989,7 +983,7 @@
     "types_naming": {
       "exclude": [],
       "severity": "Error",
-      "pattern": "^TY_.+$"
+      "pattern": "^T(Y|T)_.+$"
     },
     "uncaught_exception": {
       "exclude": [],
