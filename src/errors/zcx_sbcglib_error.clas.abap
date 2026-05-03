@@ -50,7 +50,6 @@ public section.
   class-methods RAISE_WITH_SY
     raising
       ZCX_SBCGLIB_ERROR .
-  type-pools ABAP .
   class-methods RAISE_SIMPLE
     importing
       !MSG type CSEQUENCE
