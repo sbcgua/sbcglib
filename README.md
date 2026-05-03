@@ -26,3 +26,7 @@ See more in [Docs](./docs) (the descriptions are AI-friendly).
 
 - Maintained by Alexander Tsybulsky (SBCG LLC).
 - Maintenance View Re-generator (`mvr` subpackage) may contain fragments derived from [abapGit](https://github.com/abapGit/abapGit)
+
+## Licence
+
+If you're reusing the code from the library here, please respect the licence.
