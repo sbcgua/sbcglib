@@ -92,15 +92,15 @@ CLASS ZCL_SBCGLIB_ERR_UTILS IMPLEMENTATION.
 
       "oref ?= cl_oo_include_naming=>get_instance_by_include( sys_call-progname ).
 
-      call method cl_oo_include_naming=>get_instance_by_include
+      cl_oo_include_naming=>get_instance_by_include(
         exporting
           progname       = ls_sys_call-progname
         receiving
           cifref         = oclif
         exceptions
           no_objecttype  = 1
-          internal_error = 2.
-      if sy-subrc is initial.
+          internal_error = 2 ).
+      if sy-subrc = 0.
         oref ?= oclif.
         e_prog = oref->clskey-clsname.
       endif.
