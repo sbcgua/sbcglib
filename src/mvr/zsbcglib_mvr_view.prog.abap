@@ -2,6 +2,7 @@ class lcl_view definition.
   public section.
 
     interfaces zif_sbcglib_view_callbacks.
+    interfaces zif_sbcglib_view_cmd_handler.
 
     class-methods create
       importing
