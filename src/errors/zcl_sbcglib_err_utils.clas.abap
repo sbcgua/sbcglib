@@ -81,8 +81,10 @@ CLASS ZCL_SBCGLIB_ERR_UTILS IMPLEMENTATION.
         et_callstack = lt_sys_stack.
 
     read table lt_sys_stack into ls_sys_call index depth.
-    e_prog = ls_sys_call-progname.
-    e_meth = ls_sys_call-eventname.
+    if sy-subrc is initial.
+      e_prog = ls_sys_call-progname.
+      e_meth = ls_sys_call-eventname.
+    endif.
 
     if ls_sys_call-eventtype = 'METH'.
       data oref type ref to if_oo_class_incl_naming.
