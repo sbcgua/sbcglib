@@ -106,7 +106,7 @@
     "check_comments": {
       "exclude": [],
       "severity": "Error",
-      "allowEndOfLine": false,
+      "allowEndOfLine": true,
       "maxIssuesPerFile": 10
     },
     "check_ddic": {
@@ -431,11 +431,11 @@
         }
       ]
     },
-    "functional_writing": false, // {
-    //   "exclude": [],
-    //   "severity": "Error",
-    //   "ignoreExceptions": true
-    // },
+    "functional_writing": {
+      "exclude": [],
+      "severity": "Error",
+      "ignoreExceptions": true
+    },
     "global_class": {
       "exclude": [],
       "severity": "Error"
@@ -1005,11 +1005,12 @@
       "exclude": [],
       "severity": "Error"
     },
-    "unnecessary_chaining": false, // {
-    //   "exclude": [],
-    //   "severity": "Error",
-    //   "maxIssuesPerFile": 10
-    // },
+    "unnecessary_chaining": {
+      "exclude": [],
+      "severity": "Error",
+      "ignoreExceptions": true,
+      "maxIssuesPerFile": 10
+    },
     "unnecessary_pragma": {
       "exclude": [],
       "severity": "Error",
