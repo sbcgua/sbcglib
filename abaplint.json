@@ -524,11 +524,7 @@
       "ignoreKeywords": [],
       "maxIssuesPerFile": 10
     },
-    "line_break_multiple_parameters": {
-      "exclude": [],
-      "severity": "Error",
-      "count": 1
-    },
+    "line_break_multiple_parameters": false, // because sometimes it reads better
     "line_break_style": {
       "exclude": [],
       "severity": "Error"
