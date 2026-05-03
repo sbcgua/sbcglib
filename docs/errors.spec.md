@@ -20,18 +20,26 @@ The errors can be instantiated in the classic way with `raise` keyword, but the 
 - `RAISE_W_MSG` method - raises error with a system message (T100)
 - `RAISE_SIMPLE` method - raise message with free text
 - both methods allows specifiyng message severity (`type`) which is then available via `MSG_TYPE` attribute
-- both metods allows specifiying dynamic args for the message - `V1` ... `V4` - where `V1` replaces `$1` placeholder in the message text, `V2` -> `$2` and so on.
-- `RAISE_SIMPLE` can optionally add error location at the beginning of the message text if `W_LOC = abap_true`
+- both metods allows specifiying dynamic args for the message - `V1` ... `V4` - where `V1` replaces `&1` placeholder in the message text, `V2` -> `&2` and so on.
+- `RAISE_SIMPLE` can optionally add error location at the beginning of the message text if `W_LOC = abap_true`. The location will be also in `LOCATION` attribute
 - `RAISE_SIMPLE` can optionally accept `RC` param which is then available via `RC` attribute - it stands for return code and can be used to identify exception in unit tests better
 - `RAISE_WITH_SY` method raises error with attributes from current `SY` context
 - Two convenient and catchable replacements for `assert`:
-  - `ASSERT_SUBRC` method raises if `sy-subrc <> 0`, optionally with a custom message(`MSG`)
-  - `ASSERT_TRUE` method raises if `test <> abap_true`, supposed to be called like this `zcx_sbcglib_error->assert_true( boolc( condition_here ) )`. optionally with a custom message(`MSG`)
+  - `ASSERT_SUBRC` method raises if `sy-subrc <> 0`
+  - `ASSERT_TRUE` method raises if `test <> abap_true`, supposed to be called like this `zcx_sbcglib_error->assert_true( boolc( condition_here ) )`
+  - both methods optionally accept a custom message(`MSG`)
+  - both methods add location at the beginning of the message (`W_LOC = abap_true`)
 - `GET_BAPIRET2` method converts the error description into `BAPIRET2` type (to be used inside `catch`)
 
 ## ZCX_SBCGLIB_INTERNAL
 
-`NO_CHECK` alternative the the `error` class, yet supposed for internal errors, thus does not provide ability to raise with system message and does force error location at the beginning of the message text. The location is then also accessible via `LOCATION` attribute.
+`NO_CHECK` alternative the the `error` class, yet supposed for internal errors, thus:
+
+- does not provide ability to raise with system message
+- doesn't have `MSG_TYPE` as always supposed to be an error
+- forces error location at the beginning of the message text. The location is then also accessible via `LOCATION` attribute.
+
+Functionality:
 
 - `RAISE` - raises error with plain `MSG` and, optionally, `RC` code
 - `ASSERT_SUBRC` and `ASSERT_TRUE` - identical to those in `ZCX_SBCGLIB_ERROR` class
@@ -41,5 +49,5 @@ The errors can be instantiated in the classic way with `raise` keyword, but the 
 
 Error related utilities. Use with care, this class is not supposed to be public functionality and may change.
 
-- `FORMAT_MESSAGE` - replaces `$x` in `MSG` with `Vx` param value
+- `FORMAT_MESSAGE` - replaces `&x` in `MSG` with `Vx` param value
 - `GET_CALL_POINT` - get's call stack item of the required depth
