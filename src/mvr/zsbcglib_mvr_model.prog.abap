@@ -1,15 +1,15 @@
 class lcl_model definition.
   public section.
 
-    types tr_views type range of tvdir-tabname.
+    types ty_views_range type range of tvdir-tabname.
     types:
       begin of ty_selection,
         devclass type range of tadir-devclass,
-        tabname  type tr_views,
+        tabname  type ty_views_range,
       end of ty_selection.
 
     types:
-      tty_spool type standard table of bapixmspow with default key.
+      ty_spool_tab type standard table of bapixmspow with default key.
 
     types:
       begin of ty_list,
@@ -20,13 +20,12 @@ class lcl_model definition.
         gendate    type tvdir-gendate,
         gentime    type tvdir-gentime,
         show_log   type text25,
-        spool_log  type tty_spool,
+        spool_log  type ty_spool_tab,
         gen_timestamp type timestamp,
         cell_type  type salv_t_int4_column,
       end of ty_list.
 
-    types:
-      tt_list type standard table of ty_list with key tabname.
+    types tt_list type standard table of ty_list with key tabname.
 
     methods constructor
       importing
@@ -45,7 +44,7 @@ class lcl_model definition.
       importing
         it_sel type tt_list
       returning
-        value(rt_spool) type tty_spool
+        value(rt_spool) type ty_spool_tab
       raising
         lcx_error.
 
@@ -68,7 +67,7 @@ class lcl_model definition.
         iv_start_timestamp type timestamp
       exporting
         ev_gen_timestamp type timestamp
-        et_spool type tty_spool
+        et_spool type ty_spool_tab
       raising
         lcx_error.
 
@@ -96,11 +95,11 @@ class lcl_model definition.
 
     class-methods submit_regeneration
       importing
-        it_views  type tr_views
+        it_views  type ty_views_range
         iv_mode   type ty_submit_mode
         is_params type pri_params
       returning
-        value(rt_spool) type tty_spool
+        value(rt_spool) type ty_spool_tab
       raising
         lcx_error.
 
@@ -131,13 +130,13 @@ class lcl_model definition.
       importing
         iv_spool_id type tsp01-rqident
       returning
-        value(rt_spool) type tty_spool.
+        value(rt_spool) type ty_spool_tab.
 
     class-methods format_spool
       importing
-        it_spool type tty_spool
+        it_spool type ty_spool_tab
       returning
-        value(rt_spool) type tty_spool.
+        value(rt_spool) type ty_spool_tab.
 endclass.
 
 class lcl_model implementation.
@@ -230,7 +229,7 @@ class lcl_model implementation.
 
   method regenerate_one.
 
-    data lt_views_range type tr_views.
+    data lt_views_range type ty_views_range.
     data ls_params type pri_params.
     data lt_spool like et_spool.
 
@@ -245,7 +244,7 @@ class lcl_model implementation.
         c_range = lt_views_range ).
 
     "Delete TMG
-    lt_spool = lcl_model=>submit_regeneration(
+    lt_spool = submit_regeneration(
       iv_mode   = c_submit_mode-delete
       it_views  = lt_views_range
       is_params = ls_params ).
@@ -253,7 +252,7 @@ class lcl_model implementation.
     append lines of lt_spool to et_spool.
 
     "Create TMG
-    lt_spool = lcl_model=>submit_regeneration(
+    lt_spool = submit_regeneration(
       iv_mode    = c_submit_mode-generate
       it_views   = lt_views_range
       is_params  = ls_params ).
@@ -292,7 +291,6 @@ class lcl_model implementation.
     data lv_jobname  type tbtcjob-jobname.
     data lv_jobcount type tbtcjob-jobcount.
     data lv_spool_id type tsp01-rqident.
-    data lt_spool    type table of bapixmspow.
 
     case iv_mode.
       when c_submit_mode-generate.
@@ -309,16 +307,16 @@ class lcl_model implementation.
         ev_jobcount = lv_jobcount ).
 
     submit rsviewma
-      with sel_view IN it_views
-      with reg_only =  abap_false   "only already generated
-      with new_only =  abap_false   "only not yet generated
-      with all_sltd =  abap_true    "no further limitations
-      with generate =  lv_generate  "generate
-      with delete   =  lv_delete    "delete
-      with normal   =  abap_true    "Normal mode
-      with test     =  abap_false   "Test mode
+      with sel_view in it_views
+      with reg_only = abap_false   "only already generated
+      with new_only = abap_false   "only not yet generated
+      with all_sltd = abap_true    "no further limitations
+      with generate = lv_generate  "generate
+      with delete   = lv_delete    "delete
+      with normal   = abap_true    "Normal mode
+      with test     = abap_false   "Test mode
       via job lv_jobname
-      number  lv_jobcount
+      number lv_jobcount
       to sap-spool without spool dynpro
       spool parameters is_params
       and return.
@@ -338,7 +336,6 @@ class lcl_model implementation.
   method get_print_params.
 
     data lv_valid type abap_bool.
-    data ls_params type pri_params.
 
     call function 'GET_PRINT_PARAMETERS'
       exporting
@@ -401,7 +398,9 @@ class lcl_model implementation.
     endwhile.
 
     read table lt_job_read_steplist into ls_steplist index 1.
-    rv_spool_id = ls_steplist-listident.
+    if sy-subrc = 0.
+      rv_spool_id = ls_steplist-listident.
+    endif.
 
   endmethod.
 

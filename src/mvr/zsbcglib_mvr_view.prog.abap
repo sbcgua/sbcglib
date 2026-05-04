@@ -13,7 +13,7 @@ class lcl_view definition.
 
     class-methods display_spool
       changing
-        ct_spool type lcl_model=>tty_spool.
+        ct_spool type lcl_model=>ty_spool_tab.
 
   private section.
 
@@ -66,7 +66,7 @@ class lcl_view implementation.
 
   method zif_sbcglib_view_callbacks~on_double_click.
 
-    data lt_spool type lcl_model=>tty_spool.
+    data lt_spool type lcl_model=>ty_spool_tab.
     field-symbols <rec> type lcl_model=>ty_list.
 
     assign iv_record to <rec>.

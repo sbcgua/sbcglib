@@ -79,15 +79,14 @@ class zcl_sbcglib_view_fieldcat definition
         unit type lvc_s_fcat-qfieldname,
         color type lvc_s_colo,
         opts type string_table,
-      end of ty_field.
-    types:
-      tty_fields type sorted table of ty_field with unique key name
+      end of ty_field,
+      ty_fields type sorted table of ty_field with unique key name
         with non-unique sorted key by_ord components ord.
 
     constants c_no_auto_order_marker type i value -9999.
 
     data mv_auto_order_index type i.
-    data mt_fields type tty_fields.
+    data mt_fields type ty_fields.
     data mt_default_opts type string_table.
     data:
       begin of globals,

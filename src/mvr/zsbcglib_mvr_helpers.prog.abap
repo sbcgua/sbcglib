@@ -94,7 +94,7 @@ class lcl_screen implementation.
 
   method read_screen.
 
-    data lt_d020s like table of ms_d020s.
+    data lt_d020s like standard table of ms_d020s.
 
     call function 'RS_SCREEN_LIST'
       exporting
@@ -158,16 +158,16 @@ class lcl_screen implementation.
       " If the previous conditions are met the value 'F' will be taken over
       " during de-serialization potentially overlapping other fields in the screen,
       " we set the tag to the correct value 'X'
-        if <field>-type = 'CHECK'
-            and <field>-from_dict = abap_true
-            and <field>-text is initial
-            and <field>-modific is initial.
-          <field>-modific = 'X'.
-        endif.
+      if <field>-type = 'CHECK'
+          and <field>-from_dict = abap_true
+          and <field>-text is initial
+          and <field>-modific is initial.
+        <field>-modific = 'X'.
+      endif.
 
-        if <field>-foreignkey is initial.
-          <field>-foreignkey = lc_force_off.
-        endif.
+      if <field>-foreignkey is initial.
+        <field>-foreignkey = lc_force_off.
+      endif.
 
     endloop.
 
@@ -202,7 +202,7 @@ class lcl_screen implementation.
     endloop.
     if sy-subrc is initial.
       lv_tabix = sy-tabix.
-      add 1 to lv_tabix.
+      lv_tabix = lv_tabix + 1.
       insert lines of it_ins_lines into mt_flow_logic index lv_tabix.
     endif.
   endmethod.

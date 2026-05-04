@@ -1,4 +1,4 @@
-class lcl_test_exception definition final
+class ltcl_test_exception definition final
   for testing
   duration short
   risk level harmless.
@@ -9,7 +9,7 @@ class lcl_test_exception definition final
 
 endclass.
 
-class lcl_test_exception implementation.
+class ltcl_test_exception implementation.
 
   method test_raise.
 

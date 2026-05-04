@@ -61,7 +61,6 @@ class lcl_app implementation.
   method fill_log.
   endmethod.
 
-
 endclass.
 
 start-of-selection.

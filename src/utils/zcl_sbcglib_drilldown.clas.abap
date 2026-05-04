@@ -10,7 +10,7 @@ class ZCL_SBCGLIB_DRILLDOWN definition
     " Project: SBCG ABAP Library (sbcglib) - https://github.com/sbcgua/sbcglib
 
 
-    types tty_bdcmsgcoll type standard table of bdcmsgcoll with default key.
+    types tt_bdcmsgcoll type standard table of bdcmsgcoll with default key.
 
     class-methods to_bp
       importing
@@ -79,7 +79,7 @@ class ZCL_SBCGLIB_DRILLDOWN definition
         !i_skip_first_screen type abap_bool default abap_false
         !is_options type ctu_params optional
       returning
-        value(rt_messages) type tty_bdcmsgcoll
+        value(rt_messages) type tt_bdcmsgcoll
       raising
         zcx_sbcglib_error.
     class-methods set_memory_parameters

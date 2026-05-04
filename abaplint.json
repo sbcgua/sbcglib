@@ -480,7 +480,7 @@
       "severity": "Error",
       "ignoreExceptions": true,
       "alignTryCatch": true,
-      "selectionScreenBlockIndentation": false,
+      "selectionScreenBlockIndentation": true,
       "globalClassSkipFirst": false,
       "ignoreGlobalClassDefinition": false,
       "ignoreGlobalInterface": false,
@@ -847,11 +847,7 @@
       "severity": "Error",
       "omitMeInstanceCalls": true
     },
-    "reduce_procedural_code": {
-      "exclude": [],
-      "severity": "Error",
-      "maxStatements": 10
-    },
+    "reduce_procedural_code": false,
     "reduce_string_templates": {
       "exclude": [],
       "severity": "Error"
@@ -875,13 +871,7 @@
       "severity": "Error",
       "skipForAllEntries": false
     },
-    "select_performance": {
-      "exclude": [],
-      "severity": "Error",
-      "endSelect": true,
-      "selectStar": true,
-      "starOkayIfFewColumns": 10
-    },
+    "select_performance": false,
     "select_single_full_key": {
       "exclude": [],
       "severity": "Error",
