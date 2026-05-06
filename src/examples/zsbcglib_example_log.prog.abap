@@ -3,18 +3,10 @@ report zsbcglib_example_log.
 class lcl_app definition final.
   public section.
     class-methods run.
-    class-methods fill_log importing ii_log type ref to zif_sbcglib_log.
 endclass.
 
 class lcl_app implementation.
   method run.
-
-    " TODO:
-    " - hide add_str message
-    " - add extras or label field
-    " - add show/suppress line/label, rename them ?
-    " - suppress message id in string (maybe remove at all)
-    " - add status text (maybe empty short text? - ** or @)
 
     data li_log type ref to zif_sbcglib_log.
 
@@ -56,9 +48,6 @@ class lcl_app implementation.
 
     zcl_sbcglib_log_view=>display( li_log ).
 
-  endmethod.
-
-  method fill_log.
   endmethod.
 
 endclass.

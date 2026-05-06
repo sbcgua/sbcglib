@@ -10,6 +10,8 @@ The package contains a simple abstraction of a log and a view UI for it. It is i
 - class `zcl_sbcglib_log` - implementation of the interface
 - class `zcl_sbcglib_log_view` - UI to show the log, reuses `zcl_sbcglib_view` from the `view` package
 
+See an example program with usage in [`zsbcglib_example_log`](../src/examples/zsbcglib_example_log.prog.abap).
+
 ## ZIF_SBCGLIB_LOG
 
 The interface exposes readonly attributes:
