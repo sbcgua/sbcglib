@@ -647,6 +647,7 @@
     },
     "no_aliases": {
       "exclude": [],
+      "ignorePrivate": true,
       "severity": "Error"
     },
     "no_chained_assignment": {
@@ -999,7 +1000,7 @@
     "unnecessary_return": {
       "exclude": [],
       "severity": "Error",
-      "allowEmpty": false
+      "allowEmpty": true
     },
     "unreachable_code": {
       "exclude": [],
@@ -1024,7 +1025,7 @@
       "skipNames": []
     },
     "unused_variables": {
-      "exclude": [],
+      "exclude": ["\\.intf\\.abap$"],
       "severity": "Error",
       "skipNames": [],
       "skipAbstract": false

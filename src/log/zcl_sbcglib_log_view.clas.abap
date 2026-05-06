@@ -200,6 +200,7 @@ CLASS ZCL_SBCGLIB_LOG_VIEW IMPLEMENTATION.
 
 
   method zif_sbcglib_view_callbacks~on_double_click.
+    return.
   endmethod.
 
 
