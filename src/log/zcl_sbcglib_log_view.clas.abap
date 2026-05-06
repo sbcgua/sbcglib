@@ -14,8 +14,8 @@ class zcl_sbcglib_log_view definition
 
     constants:
       begin of c_exit_command,
-          close type char1 value '',
-        end of c_exit_command.
+        close type char1 value '',
+      end of c_exit_command.
 
     class-methods display
       importing
