@@ -46,7 +46,7 @@ class ZCL_SBCGLIB_DRILLDOWN definition
         !i_vbeln type vbeln
       raising
         zcx_sbcglib_error.
-    class-methods to_sd_document
+    class-methods to_sd_billing
       importing
         !i_vbeln type vbeln
       raising
@@ -390,6 +390,27 @@ CLASS ZCL_SBCGLIB_DRILLDOWN IMPLEMENTATION.
   endmethod.
 
 
+  method to_sd_billing.
+
+    data lt_using type ty_using_tab.
+    field-symbols <u> like line of lt_using.
+
+    if i_vbeln is initial.
+      return.
+    endif.
+
+    append initial line to lt_using assigning <u>.
+    <u>-fnam = 'VF'.
+    <u>-fval = i_vbeln.
+
+    call_transaction_w_auth_check(
+      i_skip_first_screen = abap_true
+      i_tcode             = 'VF03'
+      it_using            = lt_using ).
+
+  endmethod.
+
+
   method to_sd_contract.
 
     data lt_using type ty_using_tab.
@@ -427,27 +448,6 @@ CLASS ZCL_SBCGLIB_DRILLDOWN IMPLEMENTATION.
     call_transaction_w_auth_check(
       i_skip_first_screen = abap_true
       i_tcode             = 'VL03N'
-      it_using            = lt_using ).
-
-  endmethod.
-
-
-  method to_sd_document.
-
-    data lt_using type ty_using_tab.
-    field-symbols <u> like line of lt_using.
-
-    if i_vbeln is initial.
-      return.
-    endif.
-
-    append initial line to lt_using assigning <u>.
-    <u>-fnam = 'VF'.
-    <u>-fval = i_vbeln.
-
-    call_transaction_w_auth_check(
-      i_skip_first_screen = abap_true
-      i_tcode             = 'VF03'
       it_using            = lt_using ).
 
   endmethod.
