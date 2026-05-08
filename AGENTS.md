@@ -14,4 +14,4 @@ This library is a collection of tools, each in its own abap package (thus, own s
 - `UTIL` - misc utility classes
 - `VIEW` - convenient view wrapper class, built on SALV and utillities for it
 
-More detailed information about the content and functionality of each sub-package is available (where relevant) in `docs` dir, named as `<package>.spec.md`. E.g. `docs/errors.spec.md` for `errors` package. Read the relevant file when reusing a sub-package or changing its code.
+More detailed information about the content and functionality of each sub-package is available (where relevant) in `docs` dir, named as `<package>.spec.md`. E.g. `docs/errors.spec.md` for `errors` package. Read the relevant file when reusing a sub-package or changing its code. If changing the code - update the docs accordingly.
