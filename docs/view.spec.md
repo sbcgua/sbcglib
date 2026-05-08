@@ -51,7 +51,7 @@ Runtime methods:
 Extra configuration before calling `display`:
 
 - `get_salv_instance` - returns the underlying SALV instance
-- `set_sorting` - sets sorting order in the table, accepts either a `string_table` or a comma-delimited string of fields. Each field may optionally have `*` prefix to set subtotal and/or `+`/`-` prefix to set sorting order, e.g.: `'field1,-field2,*field3,*-field4'`, where fields 3 and 4 will have subtotals and field 2 and 4 will be sorted in descending order
+- `set_sorting` - sets sorting order in the table, accepts either a `string_table` or a comma-delimited string of fields. Each field may optionally have `*` prefix to set subtotal and/or `+`/`-` suffix to set sorting order, e.g.: `'field1,field2-,*field3,*field4-'`, where fields 3 and 4 will have subtotals and field 2 and 4 will be sorted in descending order
 - `set_aggregations` - sets record grouping in the table, accepts either a `string_table` or a comma-delimited string of fields
 - `hide_fields` - hides given fields (`string_table` or a comma-delimited string). As a simpler alternative to `zcl_sbcglib_view_fieldcat` setup
 - `add_header` - adds alv text header. Accepts multiline string (`\n` separated)
