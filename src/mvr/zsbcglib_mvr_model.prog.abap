@@ -8,8 +8,7 @@ class lcl_model definition.
         tabname  type ty_views_range,
       end of ty_selection.
 
-    types:
-      ty_spool_tab type standard table of bapixmspow with default key.
+    types ty_spool_tab type standard table of bapixmspow with default key.
 
     types:
       begin of ty_list,
@@ -183,22 +182,20 @@ class lcl_model implementation.
 
   method select_data.
 
-    select v~tabname v~area t~ddtext v~gendate v~gentime ##TOO_MANY_ITAB_FIELDS
+    select v~tabname v~area t~ddtext v~gendate v~gentime
       from tvdir as v
         left join dd02t as t
         on  t~tabname    = v~tabname
         and t~ddlanguage = sy-langu
       into corresponding fields of table mt_list
       where v~tabname  in ms_selection-tabname
-      and   v~devclass in ms_selection-devclass.
+      and   v~devclass in ms_selection-devclass ##TOO_MANY_ITAB_FIELDS.
 
   endmethod.
 
   method regenerate.
 
     data ls_sel type ty_list.
-    data lt_spool like rt_spool.
-    data lv_gen_timestamp type timestamp.
     data lv_start_timestamp type timestamp.
     field-symbols <ls_list> type ty_list.
 
@@ -370,7 +367,7 @@ class lcl_model implementation.
   method read_job.
 
     data ls_jobhead    type tbtcjob.
-    data lt_job_read_steplist type table of tbtcstep.
+    data lt_job_read_steplist type standard table of tbtcstep.
     data ls_steplist   type tbtcstep.
 
     while ls_jobhead-status na 'AF'.

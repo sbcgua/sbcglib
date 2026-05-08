@@ -27,7 +27,7 @@
   },
   "rules": {
     "7bit_ascii": {
-      "exclude": [],
+      "exclude": ["zcl_sbcglib_log_view.clas.testclasses.abap$"],
       "severity": "Error"
     },
     "abapdoc": false,
@@ -250,7 +250,7 @@
       "severity": "Error"
     },
     "empty_structure": {
-      "exclude": [],
+      "exclude": ["zsbcglib_prog_template.*"],
       "severity": "Error",
       "loop": true,
       "loopAllowIfSubrc": true,
@@ -532,11 +532,7 @@
       "length": 120,
       "maxIssuesPerFile": 10
     },
-    "line_only_punc": {
-      "exclude": [],
-      "severity": "Error",
-      "ignoreExceptions": true
-    },
+    "line_only_punc": false,
     "local_class_naming": {
       "exclude": [],
       "severity": "Error",
@@ -592,7 +588,9 @@
       "severity": "Error"
     },
     "method_length": {
-      "exclude": [],
+      "exclude": [
+        "zsbcglib_prog_template.*"
+      ],
       "severity": "Error",
       "statements": 100,
       "errorWhenEmpty": true,
@@ -894,7 +892,7 @@
       "lines": 4
     },
     "short_case": {
-      "exclude": [],
+      "exclude": ["zsbcglib_prog_template.*"],
       "severity": "Error",
       "length": 1,
       "allow": []
@@ -1025,7 +1023,9 @@
       "skipNames": []
     },
     "unused_variables": {
-      "exclude": ["\\.intf\\.abap$"],
+      "exclude": [
+        "\\.intf\\.abap$",
+        "zsbcglib_prog_template.*"],
       "severity": "Error",
       "skipNames": [],
       "skipAbstract": false

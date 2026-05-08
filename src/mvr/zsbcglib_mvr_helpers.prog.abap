@@ -177,6 +177,9 @@ class lcl_screen implementation.
 
     field-symbols <cont> like line of mt_containers.
     read table mt_containers assigning <cont> with key type = 'TABLE_CTRL'.
+    if sy-subrc <> 0.
+      lcx_error=>raise( |{ mv_prog }/{ mv_dynnr } table control container not found| ).
+    endif.
     <cont>-length = iv_width.
     ms_header-columns = iv_width + 1.
 
@@ -278,14 +281,18 @@ class lcl_utils implementation.
         loop at <table> assigning <list_line>.
           append initial line to c_range assigning <range_line>.
           assign component 'SIGN' of structure <range_line> to <field>.
+          assert sy-subrc = 0.
           <field> = 'I'.
           assign component 'OPTION' of structure <range_line> to <field>.
+          assert sy-subrc = 0.
           <field> = 'EQ'.
           assign component 'LOW' of structure <range_line> to <field>.
+          assert sy-subrc = 0.
           if lv_fld_name is initial.
             <field> = <list_line>.
           else.
             assign component lv_fld_name of structure <list_line> to <src>.
+            assert sy-subrc = 0.
             <field> = <src>.
           endif.
         endloop.
@@ -299,34 +306,41 @@ class lcl_utils implementation.
 
         append initial line to c_range assigning <range_line>.
         assign component 'SIGN' of structure <range_line> to <field>.
+        assert sy-subrc = 0.
         <field> = 'I'.
         assign component 'OPTION' of structure <range_line> to <field>.
+        assert sy-subrc = 0.
         <field> = 'EQ'.
         assign component 'LOW' of structure <range_line> to <field>.
+        assert sy-subrc = 0.
         if lv_fld_name is initial.
           <field> = <list_line>.
         else.
           assign component lv_fld_name of structure <list_line> to <src>.
+          assert sy-subrc = 0.
           <field> = <src>.
         endif.
 
       when 'E'. "Data element
         append initial line to c_range assigning <range_line>.
         assign component 'SIGN' of structure <range_line> to <field>.
+        assert sy-subrc = 0.
         if i_sign is initial.
           <field> = 'I'.
         else.
           <field> = i_sign.
         endif.
         assign component 'OPTION' of structure <range_line> to <field>.
+        assert sy-subrc = 0.
         if i_option is initial.
           <field> = 'EQ'.
         else.
           <field> = i_option.
         endif.
         assign component 'LOW' of structure <range_line> to <field>.
+        assert sy-subrc = 0.
         <field> = i_data.
-     endcase.
+    endcase.
 
   endmethod.
 

@@ -108,7 +108,7 @@ class lcl_modifier_list implementation.
 
 endclass.
 
-form create_modifiers_list_getter changing ci_getter.
+form create_modifiers_list_getter changing ci_getter type ref to lif_modifiers_list_getter.
   create object ci_getter type lcl_modifier_list.
 endform.
 

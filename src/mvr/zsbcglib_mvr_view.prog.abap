@@ -115,6 +115,7 @@ class lcl_view implementation.
   endmethod.
 
   method zif_sbcglib_view_cmd_handler~on_user_command.
+    return.
   endmethod.
 
   method display_spool.
