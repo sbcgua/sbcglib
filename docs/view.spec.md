@@ -56,6 +56,7 @@ Extra configuration before calling `display`:
 - `hide_fields` - hides given fields (`string_table` or a comma-delimited string). As a simpler alternative to `zcl_sbcglib_view_fieldcat` setup
 - `add_header` - adds alv text header. Accepts multiline string (`\n` separated)
 - `enable_layout_variants` - allows saving layout variants. Key should be unique, e.g. `|{ sy-cprog }_BY_INVOICE|`
+- `set_tooltip` - add tooltip to the view (the method is unstable, _avoid_ for now)
 
 ## Callback Interfaces
 
@@ -111,6 +112,8 @@ Methods meaning:
     - `icon` - set field as icon
     - `hotspot` - set field as hotspot (also useful to make clickable checkbox in a readonly SALV)
     - `sum` - enable aggregation for the field
+    - `no_auto_ord` - exclude field from auto ordering (effectively, put it after all auto ordered fields)
+    - `edit` - make field editable (not well tested, and not supporded by SALV so use with care)
 - `tech` mark field as technical (cannot be displayed later, e.g. for `mandt`)
 - `hide` hide field (a shorter version of `hide` opt), can be displayed later (sets `no_out` alv field param)
 - `defaults` allows specifying default options for all fields in the catalog, even for the unmentioned:

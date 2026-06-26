@@ -175,7 +175,8 @@ CLASS ZCL_SBCGLIB_LOG IMPLEMENTATION.
       v1 = is_rec-msgv1
       v2 = is_rec-msgv2
       v3 = is_rec-msgv3
-      v4 = is_rec-msgv4 ).
+      v4 = is_rec-msgv4
+      index = is_rec-index ).
 
   endmethod.
 
@@ -288,7 +289,7 @@ CLASS ZCL_SBCGLIB_LOG IMPLEMENTATION.
 
 
   method zif_sbcglib_log~is_empty.
-    rv_yes = boolc( lines( messages ) > 0 ).
+    rv_yes = boolc( lines( messages ) = 0 ).
   endmethod.
 
 

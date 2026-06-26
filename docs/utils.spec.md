@@ -35,6 +35,7 @@ All methods are static. Navigation silently returns when key fields are initial 
 - `to_mm_contract(i_ebeln)` - opens a MM contract (ME33K) or scheduling agreement (ME33L); determines type by reading EKKO-BSTYP
 - `to_material(i_matnr)` - opens a material master in MM03
 - `call_transaction_w_auth_check(i_tcode, it_using, ...)` - low-level helper used by the navigation methods; calls a transaction with BDC data after an auth check; supports three call variants: `i_mode` (E/N/A), `i_skip_first_screen`, or `is_options` (CTU_PARAMS); returns collected BDC messages
+- `set_memory_parameters` - a helper that sets memory parameters before invoking a transaction. Used internally but can be useful to call other transactions.
 
 ## ZCL_SBCGLIB_FS_UTILS
 
