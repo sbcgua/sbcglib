@@ -1,0 +1,4 @@
+interface:
+  display_name: "SBCGLIB ABAP"
+  short_description: "Use SBCGLIB utilities in ABAP projects"
+  default_prompt: "Use $sbcglib-abap to reuse SBCGLIB components in this ABAP report."
