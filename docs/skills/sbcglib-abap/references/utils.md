@@ -125,3 +125,10 @@ Get domain values:
 data lt_values type dd07v_tab.
 lt_values = zcl_sbcglib_utils=>read_dom_values( i_domain_name = 'THE_DOMAIN' ).
 ```
+
+Read class text pool:
+
+```abap
+data lt_texts type table_of_textpool.
+lt_texts = zcl_sbcglib_utils=>get_class_text_pool( i_class_name = 'THE_CLASS' ).
+```

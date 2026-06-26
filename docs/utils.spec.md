@@ -64,3 +64,4 @@ All operations target the user's frontend (desktop) via `CL_GUI_FRONTEND_SERVICE
 - `is_s4h` - detects whether the current system is S/4HANA by reflecting on `CL_COS_UTILITIES` at runtime; returns `abap_bool`
 - `join(it_tab, iv_fld)` - joins table values into a comma-separated string; accepts a flat char/string table (omit `iv_fld`) or a structured table with a field name; numeric fields (type N) are stripped of leading zeros
 - `read_dom_values(i_domain_name,i_langu)` - read the domain values in the given language (defaulted to `sy-langu` if not supplied)
+- `get_class_text_pool(i_class_name,i_langu)` - read class text pool in the given language (defaulted to `sy-langu` if not supplied)
