@@ -25,6 +25,14 @@ class ZCL_SBCGLIB_UTILS definition
         iv_fld type csequence optional
       returning
         value(rv_str) type string.
+    class-methods read_dom_values
+      importing
+        !i_domain_name type dd01l-domname
+        !i_langu type sy-langu default sy-langu
+      returning
+        value(rt_dd07v) type dd07v_tab
+      raising
+        zcx_ua_vat.
 
   protected section.
   private section.
@@ -97,6 +105,38 @@ CLASS ZCL_SBCGLIB_UTILS IMPLEMENTATION.
       endif.
 
     endloop.
+
+  endmethod.
+
+
+  method read_dom_values.
+
+    data lt_dd07v_n type dd07v_tab.
+    data l_langu    type sy-langu.
+
+    if i_langu is not initial.
+      l_langu = i_langu.
+    else.
+      l_langu = sy-langu.
+    endif.
+
+    call function 'DD_DOMA_GET'
+      exporting
+        domain_name   = i_domain_name
+        langu         = l_langu
+        prid          = 0
+        withtext      = 'X'
+      tables
+        dd07v_tab_a   = rt_dd07v     "Domain fixed values in A version
+        dd07v_tab_n   = lt_dd07v_n   "Domain fixed values in N version
+      exceptions
+        illegal_value = 1
+        op_failure    = 2
+        others        = 3.
+
+    if sy-subrc <> 0.
+      zcx_sbcglib_internal=>raise( |Cannot read domain { i_domain_name }| ).
+    endif.
 
   endmethod.
 
