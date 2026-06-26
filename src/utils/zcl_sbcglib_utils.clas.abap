@@ -30,9 +30,15 @@ class ZCL_SBCGLIB_UTILS definition
         !i_domain_name type dd01l-domname
         !i_langu type sy-langu default sy-langu
       returning
-        value(rt_dd07v) type dd07v_tab
-      raising
-        zcx_ua_vat.
+        value(rt_dd07v) type dd07v_tab.
+    class-methods get_class_text_pool
+      importing
+        !i_obj type ref to object optional
+        !i_class_name type seoclsname optional
+        !i_langu type sy-langu default sy-langu
+      returning
+        value(r_texts) type table_of_textpool.
+
 
   protected section.
   private section.
@@ -41,6 +47,35 @@ ENDCLASS.
 
 
 CLASS ZCL_SBCGLIB_UTILS IMPLEMENTATION.
+
+
+  method get_class_text_pool.
+
+    data lo_obj_desc  type ref to cl_abap_objectdescr.
+    data lv_class_inc type c length 32.
+    data l_langu      type sy-langu.
+
+    if i_langu is not initial.
+      l_langu = i_langu.
+    else.
+      l_langu = sy-langu.
+    endif.
+
+    if i_obj is bound.
+      lo_obj_desc ?= cl_abap_objectdescr=>describe_by_object_ref( i_obj ).
+      lv_class_inc = lo_obj_desc->get_relative_name( ).
+    elseif i_class_name is not initial.
+      lv_class_inc = to_upper( i_class_name ).
+    else.
+      zcx_sbcglib_internal=>raise( |No class name or object passed as a param| ).
+    endif.
+
+    lv_class_inc+30(2) = 'CP'.
+    translate lv_class_inc using ' ='.
+
+    read textpool lv_class_inc into r_texts language l_langu.
+
+  endmethod.
 
 
   method is_s4h.
