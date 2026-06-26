@@ -118,3 +118,10 @@ lv_text = zcl_sbcglib_utils=>join( it_tab = lt_items iv_fld = 'BELNR' ).
 ```
 
 `join` accepts a flat char/string table without `iv_fld`, or a structured table with a field name. Numeric text fields of ABAP type `N` are stripped of leading zeros.
+
+Get domain values:
+
+```abap
+data lt_values type dd07v_tab.
+lt_values = zcl_sbcglib_utils=>read_dom_values( i_domain_name = 'THE_DOMAIN' ).
+```
