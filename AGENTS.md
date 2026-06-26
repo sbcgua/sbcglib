@@ -12,6 +12,6 @@ This library is a collection of tools, each in its own abap package (thus, own s
 - `MVR` - Maintenance View Re-generator, the tool to regenerate maintenance views and apply typical fixes e.g. size of fields and screen
 - `TEMPLATES` - boilerplate programs and objects to save new program initiation time
 - `UTIL` - misc utility classes
-- `VIEW` - convenient view wrapper class, built on SALV and utillities for it
+- `VIEW` - convenient view wrapper class, built on SALV and utilities for it
 
 More detailed information about the content and functionality of each sub-package is available (where relevant) in `docs` dir, named as `<package>.spec.md`. E.g. `docs/errors.spec.md` for `errors` package. Read the relevant file when reusing a sub-package or changing its code. If changing the code - update the docs accordingly.

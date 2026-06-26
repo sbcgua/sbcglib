@@ -2,9 +2,17 @@
 
 This document describes public functionality of the SBCGLIB `utils` package.
 
+## Reuse summary
+
+- Use this package for common static helpers: authorization checks, business-object drilldowns, frontend file operations, S/4HANA detection, list deduplication, and string joining.
+- Do not use frontend file utilities in background, HTTP, RFC, or other no-GUI contexts; they are based on `CL_GUI_FRONTEND_SERVICES`.
+- Main entry points: `ZCL_SBCGLIB_AUTH_UTILS`, `ZCL_SBCGLIB_DRILLDOWN`, `ZCL_SBCGLIB_FS_UTILS`, and `ZCL_SBCGLIB_UTILS`.
+- Dependencies: several helpers raise `ZCX_SBCGLIB_ERROR` or `ZCX_SBCGLIB_INTERNAL`, so the `ERRORS` package is expected.
+- Agent note: all public utility APIs are static class methods; instantiate none of these classes.
+
 ## Public functionality
 
-The package is a collection of frequent code patterns of different nature that worth to be unified and simplified. It includes:
+The package is a collection of frequent code patterns of different nature that are worth unifying and simplifying. It includes:
 
 - `ZCL_SBCGLIB_AUTH_UTILS` - typical authorization checks, raises `ZCX_SBCGLIB_ERROR` on failure
 - `ZCL_SBCGLIB_DRILLDOWN` - static methods to navigate into widespread business objects like vendors, customers, FI documents, or SD/MM objects; intended for use in ALV double-click handlers
@@ -35,7 +43,7 @@ All methods are static. Navigation silently returns when key fields are initial 
 - `to_mm_contract(i_ebeln)` - opens a MM contract (ME33K) or scheduling agreement (ME33L); determines type by reading EKKO-BSTYP
 - `to_material(i_matnr)` - opens a material master in MM03
 - `call_transaction_w_auth_check(i_tcode, it_using, ...)` - low-level helper used by the navigation methods; calls a transaction with BDC data after an auth check; supports three call variants: `i_mode` (E/N/A), `i_skip_first_screen`, or `is_options` (CTU_PARAMS); returns collected BDC messages
-- `set_memory_parameters` - a helper that sets memory parameters before invoking a transaction. Used internally but can be useful to call other transactions.
+- `set_memory_parameters(it_parameters)` - helper that sets memory parameters before invoking a transaction. Used internally but can be useful to call other transactions.
 
 ## ZCL_SBCGLIB_FS_UTILS
 

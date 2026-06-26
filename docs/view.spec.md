@@ -2,9 +2,17 @@
 
 This document describes public functionality of the SBCGLIB `view` package.
 
+## Reuse summary
+
+- Use this package for classical ABAP GUI/SALV list displays where the program needs a compact OO wrapper around common ALV setup, callbacks, user commands, popups, and field catalog tuning.
+- Do not use it for editable grids, Web UI/Fiori output, or cases requiring full direct control over every SALV event and layout detail.
+- Main entry points: `ZCL_SBCGLIB_VIEW=>CREATE`, `CREATE_POPUP`, `ZCL_SBCGLIB_VIEW_FIELDCAT`, `ZCL_SBCGLIB_VIEW_POPUPS`, `ZIF_SBCGLIB_VIEW_CALLBACKS`, and `ZIF_SBCGLIB_VIEW_CMD_HANDLER`.
+- Dependencies: SALV and classic SAP GUI runtime. The package uses `ZCX_SBCGLIB_VIEW_ERROR`; `LOG` depends on this package for log display.
+- Agent note: prefer `ZCL_SBCGLIB_VIEW_FIELDCAT` for column setup and use the callback interfaces instead of modifying the wrapped SALV object unless the requirement needs direct SALV access.
+
 ## Public functionality
 
-- the components of the class use own exception `ZCX_SBCGLIB_VIEW_ERROR` (of no_check type, to pass through potential wrappers or composable interfaces)
+- the package components use their own exception `ZCX_SBCGLIB_VIEW_ERROR` (of no_check type, to pass through potential wrappers or composable interfaces)
 
 - `ZCL_SBCGLIB_VIEW` - a wrapper around SALV to make displaying typical grid layout simpler
 - `ZCL_SBCGLIB_VIEW_POPUPS` a class of static wrappers for standard SAP popups, to be called in object-oriented style.
@@ -29,7 +37,7 @@ The typical usage would look like:
   )->display( ).
 ```
 
-which will: display data from `lt_content_to_display`, use screen status `MY_SCREEN_STATUS` from `ZPROGRAM` (the program name can be omited, if the screen status belongs to the current program), forward command handling and callbacks like double click to the calling class.
+which will: display data from `lt_content_to_display`, use screen status `MY_SCREEN_STATUS` from `ZPROGRAM` (the program name can be omitted if the screen status belongs to the current program), forward command handling and callbacks like double click to the calling class.
 
 - `it_content` vs `it_content_ref` - use `ref` option if you want to display a large table in place (otherwise it is copied which increases memory usage). Exactly one of the two must be provided — supplying neither or both raises an exception.
 - set `iv_technames` to display the technical names of the fields rather than human-friendly names
@@ -38,7 +46,7 @@ which will: display data from `lt_content_to_display`, use screen status `MY_SCR
 - `iv_selection_mode` - passed to the ALV
 - optionally place the ALV into `i_container` GUI container
 
-Another construction method `create_popup` works in the similar way, just displays the modal version of the SALV. Use `iv_popup_width` and `iv_popup_height` to control the windows size.
+Another construction method `create_popup` works in a similar way, but displays the modal version of the SALV. Use `iv_popup_width` and `iv_popup_height` to control the window size.
 
 Runtime methods:
 
@@ -54,9 +62,9 @@ Extra configuration before calling `display`:
 - `set_sorting` - sets sorting order in the table, accepts either a `string_table` or a comma-delimited string of fields. Each field may optionally have `*` prefix to set subtotal and/or `+`/`-` suffix to set sorting order, e.g.: `'field1,field2-,*field3,*field4-'`, where fields 3 and 4 will have subtotals and field 2 and 4 will be sorted in descending order
 - `set_aggregations` - sets record grouping in the table, accepts either a `string_table` or a comma-delimited string of fields
 - `hide_fields` - hides given fields (`string_table` or a comma-delimited string). As a simpler alternative to `zcl_sbcglib_view_fieldcat` setup
-- `add_header` - adds alv text header. Accepts multiline string (`\n` separated)
+- `add_header` - adds ALV text header. Accepts multiline string (`\n` separated)
 - `enable_layout_variants` - allows saving layout variants. Key should be unique, e.g. `|{ sy-cprog }_BY_INVOICE|`
-- `set_tooltip` - add tooltip to the view (the method is unstable, _avoid_ for now)
+- `set_tooltip` - adds tooltip to the view (the method is unstable, _avoid_ for now)
 
 ## Callback Interfaces
 
@@ -79,7 +87,7 @@ It would typically be called from `setup_columns` callback and look like follows
     )->add( f = 'STATUS' opts = 'icon'
     )->add( f = 'CHECKBOX_FIELD' opts = 'chk'
     )->add( f = 'PARTY_CODE'     opts = 'key'
-    )->add( f = 'PARTY_NAME'     t = |{ 'Parter name'(102) }| st = |{ 'PartName'(101) }|
+    )->add( f = 'PARTY_NAME'     t = |{ 'Partner name'(102) }| st = |{ 'PartName'(101) }|
     )->add( f = 'AMOUNT'         opts = 'sum,curf=currency'
     )->add( f = 'CURRENCY'
     )->add( f = 'TEXT'           opts = 'len=20'
@@ -113,10 +121,10 @@ Methods meaning:
     - `hotspot` - set field as hotspot (also useful to make clickable checkbox in a readonly SALV)
     - `sum` - enable aggregation for the field
     - `no_auto_ord` - exclude field from auto ordering (effectively, put it after all auto ordered fields)
-    - `edit` - make field editable (not well tested, and not supporded by SALV so use with care)
+    - `edit` - make field editable (not well tested, and not supported by SALV so use with care)
 - `tech` mark field as technical (cannot be displayed later, e.g. for `mandt`)
 - `hide` hide field (a shorter version of `hide` opt), can be displayed later (sets `no_out` alv field param)
-- `defaults` allows specifying default options for all fields in the catalog, even for the unmentioned:
+- `defaults` allows specifying default options for all fields in the catalog, including unmentioned fields:
   - `hide` - hide all unmentioned fields by default
   - `autoorder` or `auto_order` - set field order in the order of their adding to the catalog (unless redefined via `ord` opt for a specific field)
   - `optimize` - optimize column width

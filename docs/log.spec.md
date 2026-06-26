@@ -2,15 +2,25 @@
 
 This document describes public functionality of the SBCGLIB `log` package.
 
+## Reuse summary
+
+- Use this package to collect messages in memory, merge and manipulate them, convert them to `BAPIRET2`, or show them in a simple popup/table UI.
+- Do not use it when the requirement is SAP Application Log (`BC-SRV-BAL`) persistence, object/subobject logging, or SLG1 integration.
+- Main entry points: `ZCL_SBCGLIB_LOG=>NEW`, interface `ZIF_SBCGLIB_LOG`, and `ZCL_SBCGLIB_LOG_VIEW=>DISPLAY`.
+- Dependencies: `ZCL_SBCGLIB_LOG_VIEW` depends on the `VIEW` package; the core log interface/class can be used without displaying the log.
+- Agent note: type variables as `ref to zif_sbcglib_log` unless implementation-specific access is needed.
+
 ## Public functionality
 
-The package contains a simple abstraction of a log and a view UI for it. It is in-memory log and is **NOT** related to "Application Log (BC-SRV-BAL)" native SAP functionality (BAL_LOG FMs). The main purpose is to conveniently collect set of messages from different sources, manipulate the log and display it to the user.
+The package contains a simple abstraction of a log and a view UI for it. It is an in-memory log and is **NOT** related to "Application Log (BC-SRV-BAL)" native SAP functionality (BAL_LOG FMs). The main purpose is to conveniently collect a set of messages from different sources, manipulate the log and display it to the user.
 
 - interface `zif_sbcglib_log` - defines the log types and methods
 - class `zcl_sbcglib_log` - implementation of the interface
 - class `zcl_sbcglib_log_view` - UI to show the log, reuses `zcl_sbcglib_view` from the `view` package
 
 See an example program with usage in [`zsbcglib_example_log`](../src/examples/zsbcglib_example_log.prog.abap).
+
+P.S. If you need SAP Application Log (BC-SRV-BAL), consider an excellent wrapper - [ABAP-Logger](Application Log (BC-SRV-BAL)). We use it in our developments and highly recommend!
 
 ## ZIF_SBCGLIB_LOG
 
@@ -63,7 +73,7 @@ Log mass manipulations:
 
 The class implements the `zif_sbcglib_log` interface. The log can be instantiated with a constructor or `new` method, both have the same parameters:
 
-- optional `i_msgid` - the default message id to be added to methods, that supplies system messages
+- optional `i_msgid` - the default message id to be added to methods that supply system messages
 - optional `i_name` - to distinguish between log instances programmatically (copied to `zif_sbcglib_log~name`) e.g. specifying the log source or purpose
 
 ## ZCL_SBCGLIB_LOG_VIEW

@@ -12,7 +12,7 @@ Packages:
 - `MVR` - Maintenance View Re-generator, the tool (or rather library) to regenerate maintenance views and apply typical fixes e.g. size of fields and screen
 - `TEMPLATES` contain boilerplate programs and objects to save new program initiation time
 - `UTIL` contains misc utility classes like interaction with FS or drilldowns to typical business objects
-- `VIEW` contains simple view class, built on SALV but simpler to call, and utillities for it (for field catalog)
+- `VIEW` contains simple view class, built on SALV but simpler to call, and utilities for it (for field catalog)
 
 See more in [Docs](./docs) (the descriptions are AI-friendly).
 

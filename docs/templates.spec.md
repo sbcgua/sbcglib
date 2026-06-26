@@ -2,9 +2,17 @@
 
 This document describes public functionality of the SBCGLIB `templates` package.
 
+## Reuse summary
+
+- Use this package as a starting point for classical executable reports with selection screen, data-selection model, optional processing models, a controller, a reusable view wrapper, and centralized exception handling.
+- Reuse by copying the template report and all its includes, then renaming and adapting the local classes/includes to the target program.
+- Main entry point: `ZSBCGLIB_PROG_TEMPLATE` and its includes.
+- Dependencies: intended to be used with `ERRORS`, `LOG`, `UTIL`, and `VIEW`.
+- Agent note: do not treat the template includes as a runtime API. They are boilerplate to copy and adapt in a new report.
+
 ## Public functionality
 
-The package contains boilerplates for reports to speed up typical program start. In order to reuse - copy the program and all its includes and modify as needed.
+The package contains boilerplates for reports to speed up typical program start. To reuse them, copy the program and all its includes and modify as needed.
 
 ## ZSBCGLIB_PROG_TEMPLATE
 
