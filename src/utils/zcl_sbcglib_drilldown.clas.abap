@@ -10,8 +10,7 @@ class ZCL_SBCGLIB_DRILLDOWN definition
     " Project: SBCG ABAP Library (sbcglib) - https://github.com/sbcgua/sbcglib
 
 
-    types:
-      tty_bdcmsgcoll type standard table of bdcmsgcoll with default key.
+    types tt_bdcmsgcoll type standard table of bdcmsgcoll with default key.
 
     class-methods to_bp
       importing
@@ -47,7 +46,7 @@ class ZCL_SBCGLIB_DRILLDOWN definition
         !i_vbeln type vbeln
       raising
         zcx_sbcglib_error.
-    class-methods to_sd_document
+    class-methods to_sd_billing
       importing
         !i_vbeln type vbeln
       raising
@@ -80,7 +79,7 @@ class ZCL_SBCGLIB_DRILLDOWN definition
         !i_skip_first_screen type abap_bool default abap_false
         !is_options type ctu_params optional
       returning
-        value(rt_messages) type tty_bdcmsgcoll
+        value(rt_messages) type tt_bdcmsgcoll
       raising
         zcx_sbcglib_error.
     class-methods set_memory_parameters
@@ -89,6 +88,8 @@ class ZCL_SBCGLIB_DRILLDOWN definition
 
   protected section.
   private section.
+
+    types ty_using_tab type standard table of bdcdata with default key.
 
     class-methods is_business_partner
       importing
@@ -122,7 +123,7 @@ CLASS ZCL_SBCGLIB_DRILLDOWN IMPLEMENTATION.
     elseif i_mode is not initial.
       call transaction i_tcode
         using it_using
-        mode  i_mode
+        mode i_mode
         messages into rt_messages. "#EC CI_CALLTA
     elseif is_options is not initial.
       call transaction i_tcode
@@ -141,18 +142,16 @@ CLASS ZCL_SBCGLIB_DRILLDOWN IMPLEMENTATION.
     if iv_kunnr is not initial.
       select single partner
         from but000 as b
-          inner join cvi_cust_link as c
-          on  c~customer     = iv_kunnr
-          and c~partner_guid = b~partner_guid
+        inner join cvi_cust_link as c
+        on c~customer     = iv_kunnr
+        and c~partner_guid = b~partner_guid
         into rv_bp_partner.
-    endif.
-
-    if iv_lifnr is not initial.
+    elseif iv_lifnr is not initial.
       select single partner
         from but000 as b
-          inner join cvi_vend_link as c
-          on  c~vendor       = iv_lifnr
-          and c~partner_guid = b~partner_guid
+        inner join cvi_vend_link as c
+        on c~vendor       = iv_lifnr
+        and c~partner_guid = b~partner_guid
         into rv_bp_partner.
     endif.
 
@@ -208,7 +207,7 @@ CLASS ZCL_SBCGLIB_DRILLDOWN IMPLEMENTATION.
   method to_business_partner.
 
     data lv_bp_partner type bu_partner.
-    data lt_using type table of bdcdata.
+    data lt_using type ty_using_tab.
     field-symbols <u> like line of lt_using.
 
     if i_lifnr is initial and i_kunnr is initial.
@@ -285,7 +284,7 @@ CLASS ZCL_SBCGLIB_DRILLDOWN IMPLEMENTATION.
 
   method to_fi_document.
 
-    data lt_using type table of bdcdata.
+    data lt_using type ty_using_tab.
     field-symbols <u> like line of lt_using.
 
     append initial line to lt_using assigning <u>.
@@ -310,7 +309,7 @@ CLASS ZCL_SBCGLIB_DRILLDOWN IMPLEMENTATION.
 
   method to_material.
 
-    data lt_using type table of bdcdata.
+    data lt_using type ty_using_tab.
     field-symbols <u> like line of lt_using.
 
     if i_matnr is initial.
@@ -335,7 +334,7 @@ CLASS ZCL_SBCGLIB_DRILLDOWN IMPLEMENTATION.
   method to_mm_contract.
 
     data lv_bstyp type ekko-bstyp.
-    data lt_using type table of bdcdata.
+    data lt_using type ty_using_tab.
     field-symbols <u> like line of lt_using.
 
     if i_ebeln is initial.
@@ -346,31 +345,37 @@ CLASS ZCL_SBCGLIB_DRILLDOWN IMPLEMENTATION.
     select single bstyp into lv_bstyp
       from ekko
       where ebeln = i_ebeln.
-
-    if lv_bstyp = 'K'.        " Contract
-      append initial line to lt_using assigning <u>.
-      <u>-fnam = 'CTR'.
-      <u>-fval = i_ebeln.
-      call_transaction_w_auth_check(
-        i_skip_first_screen = abap_true
-        i_tcode             = 'ME33K'
-        it_using            = lt_using ).
-    elseif lv_bstyp = 'L'.    " Scheduling agreement
-      append initial line to lt_using assigning <u>.
-      <u>-fnam = 'SAG'.
-      <u>-fval = i_ebeln.
-      call_transaction_w_auth_check(
-        i_skip_first_screen = abap_true
-        i_tcode             = 'ME33L'
-        it_using            = lt_using ).
+    if sy-subrc <> 0.
+      return.
     endif.
+
+    case lv_bstyp.
+      when 'K'. " Contract
+        append initial line to lt_using assigning <u>.
+        <u>-fnam = 'CTR'.
+        <u>-fval = i_ebeln.
+        call_transaction_w_auth_check(
+          i_skip_first_screen = abap_true
+          i_tcode             = 'ME33K'
+          it_using            = lt_using ).
+      when 'L'. " Scheduling agreement
+        append initial line to lt_using assigning <u>.
+        <u>-fnam = 'SAG'.
+        <u>-fval = i_ebeln.
+        call_transaction_w_auth_check(
+          i_skip_first_screen = abap_true
+          i_tcode             = 'ME33L'
+          it_using            = lt_using ).
+      when others.
+        return.
+    endcase.
 
   endmethod.
 
 
   method to_mm_order.
 
-    data lt_using type table of bdcdata.
+    data lt_using type ty_using_tab.
     field-symbols <u> like line of lt_using.
 
     append initial line to lt_using assigning <u>.
@@ -385,9 +390,30 @@ CLASS ZCL_SBCGLIB_DRILLDOWN IMPLEMENTATION.
   endmethod.
 
 
+  method to_sd_billing.
+
+    data lt_using type ty_using_tab.
+    field-symbols <u> like line of lt_using.
+
+    if i_vbeln is initial.
+      return.
+    endif.
+
+    append initial line to lt_using assigning <u>.
+    <u>-fnam = 'VF'.
+    <u>-fval = i_vbeln.
+
+    call_transaction_w_auth_check(
+      i_skip_first_screen = abap_true
+      i_tcode             = 'VF03'
+      it_using            = lt_using ).
+
+  endmethod.
+
+
   method to_sd_contract.
 
-    data lt_using type table of bdcdata.
+    data lt_using type ty_using_tab.
     field-symbols <u> like line of lt_using.
 
     if i_vbeln is initial.
@@ -408,7 +434,7 @@ CLASS ZCL_SBCGLIB_DRILLDOWN IMPLEMENTATION.
 
   method to_sd_delivery.
 
-    data lt_using type table of bdcdata.
+    data lt_using type ty_using_tab.
     field-symbols <u> like line of lt_using.
 
     if i_vbeln is initial.
@@ -427,30 +453,9 @@ CLASS ZCL_SBCGLIB_DRILLDOWN IMPLEMENTATION.
   endmethod.
 
 
-  method to_sd_document.
-
-    data lt_using type table of bdcdata.
-    field-symbols <u> like line of lt_using.
-
-    if i_vbeln is initial.
-      return.
-    endif.
-
-    append initial line to lt_using assigning <u>.
-    <u>-fnam = 'VF'.
-    <u>-fval = i_vbeln.
-
-    call_transaction_w_auth_check(
-      i_skip_first_screen = abap_true
-      i_tcode             = 'VF03'
-      it_using            = lt_using ).
-
-  endmethod.
-
-
   method to_sd_order.
 
-    data lt_using type table of bdcdata.
+    data lt_using type ty_using_tab.
     field-symbols <u> like line of lt_using.
 
     append initial line to lt_using assigning <u>.
@@ -467,7 +472,7 @@ CLASS ZCL_SBCGLIB_DRILLDOWN IMPLEMENTATION.
 
   method to_sd_rebate.
 
-    data lt_using type table of bdcdata.
+    data lt_using type ty_using_tab.
     field-symbols <u> like line of lt_using.
 
     if i_knuma is initial.

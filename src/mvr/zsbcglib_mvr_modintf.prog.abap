@@ -1,7 +1,7 @@
 interface lif_tmv_modifier.
 
   types ty_table_of type standard table of ref to lif_tmv_modifier with default key.
-  types tty_spool   type standard table of bapixmspow with default key.
+  types ty_spool_tab   type standard table of bapixmspow with default key.
 
   methods accepts
     importing
@@ -12,7 +12,7 @@ interface lif_tmv_modifier.
     importing
       iv_tab_name type tvdir-tabname
     returning
-      value(rt_spool) type tty_spool
+      value(rt_spool) type ty_spool_tab
     raising
       lcx_error.
 

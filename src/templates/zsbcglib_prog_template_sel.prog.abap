@@ -1,4 +1,4 @@
-tables: vbak.
+tables vbak.
 selection-screen begin of block b1 with frame title text-001.
   parameters p_vkorg type vbak-vkorg.
 selection-screen end of block b1.

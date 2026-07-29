@@ -93,7 +93,7 @@ CLASS ZCL_SBCGLIB_LOG IMPLEMENTATION.
         r_msgty = 'W'.
       when zif_sbcglib_log=>c_severity-info or zif_sbcglib_log=>c_severity-none.
         r_msgty = 'I'.
-      when others.
+      " when others.
         " error ?
     endcase.
 
@@ -175,7 +175,8 @@ CLASS ZCL_SBCGLIB_LOG IMPLEMENTATION.
       v1 = is_rec-msgv1
       v2 = is_rec-msgv2
       v3 = is_rec-msgv3
-      v4 = is_rec-msgv4 ).
+      v4 = is_rec-msgv4
+      index = is_rec-index ).
 
   endmethod.
 
@@ -218,7 +219,7 @@ CLASS ZCL_SBCGLIB_LOG IMPLEMENTATION.
       v3 = i_sy-msgv3
       v4 = i_sy-msgv4 ).
 
-  endmethod.                                             "#EC CI_VALPAR
+  endmethod.
 
 
   method zif_sbcglib_log~clear.
@@ -288,7 +289,7 @@ CLASS ZCL_SBCGLIB_LOG IMPLEMENTATION.
 
 
   method zif_sbcglib_log~is_empty.
-    rv_yes = boolc( lines( messages ) > 0 ).
+    rv_yes = boolc( lines( messages ) = 0 ).
   endmethod.
 
 
@@ -304,9 +305,9 @@ CLASS ZCL_SBCGLIB_LOG IMPLEMENTATION.
           exit.
         when 'W'.
           rv_highest_msg_type = 'W'.
-        when 'S' or 'I'.
+        " when 'S' or 'I'.
           " nothing to change - info is the default above
-        when others.
+        " when others.
           " error ?
       endcase.
     endloop.
@@ -329,7 +330,7 @@ CLASS ZCL_SBCGLIB_LOG IMPLEMENTATION.
           if rv_severity < zif_sbcglib_log=>c_severity-info.
             rv_severity = zif_sbcglib_log=>c_severity-info.
           endif.
-        when others.
+        " when others.
           " error ?
       endcase.
     endloop.

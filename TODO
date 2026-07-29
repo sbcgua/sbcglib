@@ -1,0 +1,16 @@
+Refactoring:
+  ☐ consider renaming error->raise_simple to `raise` or `raise_plain`
+
+Examples and docs:
+  ☐  add an example of view usage
+
+Conceptual issues:
+  ☐ `error` class is final, yet if it is reused in other projects, it may be desirable to extend it. Yet inheritance as an approach is undesirable for this lib. What are the alternatives?
+
+Log improvements:
+  from zsbcglib_example_log (run to test):
+    - hide add_str message
+    - add extras or label field
+    - add show/suppress line/label, rename them ?
+    - suppress message id in string (maybe remove at all)
+    - add status text (maybe empty short text? - ** or @)

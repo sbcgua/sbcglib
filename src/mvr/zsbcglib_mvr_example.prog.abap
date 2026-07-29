@@ -77,7 +77,6 @@ class lcl_modifier_list implementation.
           |ZUA_VAT_EX_CODES:199\n| &&
           |ZUA_VAT_EX_RSNS:199\n| &&
           |ZUA_VAT_USER_MD:199\n| &&
-
           |ZUA_VAT_EVENT:199\n| &&
           |ZUA_VAT_VV_HEAD:199\n| &&
           |ZUA_VAT_VV_RELAT:199\n| &&
@@ -90,17 +89,12 @@ class lcl_modifier_list implementation.
       exporting
         it_config = lcl_utils=>split(
           |ZUA_VAT_USER_MD:ACCOUNTANT:20\n| &&
-
           |ZUA_VAT_SETTINGS:ACCOUNTANT:20\n| &&
-
           |ZUA_VAT_EX_CODES:EXCODE_DESCR:40\n| &&
-
           |ZUA_VAT_EX_RSNS:LEGAL_REASON:40\n| &&
           |ZUA_VAT_EX_RSNS:EXRSN_DESCR:40\n| &&
-
           |ZUA_VAT_TC_V:MWART:15\n| &&
           |ZUA_VAT_TC_V:TEXT1:25\n| &&
-
           |ZUA_VAT_TC_VER_V:MWART:10\n| &&
           |ZUA_VAT_TC_VER_V:TEXT1:20\n| &&
           |ZUA_VAT_TC_VER_V:SCENARIO:15\n|
@@ -114,7 +108,7 @@ class lcl_modifier_list implementation.
 
 endclass.
 
-form create_modifiers_list_getter changing ci_getter.
+form create_modifiers_list_getter changing ci_getter type ref to lif_modifiers_list_getter.
   create object ci_getter type lcl_modifier_list.
 endform.
 

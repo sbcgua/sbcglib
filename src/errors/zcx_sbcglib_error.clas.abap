@@ -50,7 +50,6 @@ public section.
   class-methods RAISE_WITH_SY
     raising
       ZCX_SBCGLIB_ERROR .
-  type-pools ABAP .
   class-methods RAISE_SIMPLE
     importing
       !MSG type CSEQUENCE
@@ -223,6 +222,7 @@ method raise_with_sy.
   raise exception type zcx_sbcglib_error
     exporting
       textid = msg
+      msg_type = sy-msgty
       v1 = |{ sy-msgv1 }|
       v2 = |{ sy-msgv2 }|
       v3 = |{ sy-msgv3 }|

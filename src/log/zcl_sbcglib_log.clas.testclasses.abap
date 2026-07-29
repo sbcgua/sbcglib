@@ -1,15 +1,15 @@
-class lx_test definition inheriting from cx_no_check.
+class lcx_error definition inheriting from cx_no_check.
   public section.
     interfaces if_t100_message.
     methods constructor.
 endclass.
 
-class lx_test implementation.
-    method constructor.
-      super->constructor( ).
-      if_t100_message~t100key-msgid = '00'.
-      if_t100_message~t100key-msgno = '002'.
-    endmethod.
+class lcx_error implementation.
+  method constructor.
+    super->constructor( ).
+    if_t100_message~t100key-msgid = '00'.
+    if_t100_message~t100key-msgno = '002'.
+  endmethod.
 endclass.
 
 class ltcl_test_log definition
@@ -44,8 +44,6 @@ class ltcl_test_log implementation.
 
   method add_and_size.
 
-    data l_msg_act  type string.
-    data l_msg_exp  type string.
     data ls_msg_act like line of o->messages.
     data ls_msg_exp like line of o->messages.
 
@@ -111,10 +109,8 @@ class ltcl_test_log implementation.
   method check_log.
 
     data l_num4     type n length 4.
-    data l_chr2     type c length 2.
     data l_chr4     type c length 4.
     data l_chr10    type c length 10.
-    data l_tabix    type sy-tabix.
     data l_string   type string.
     data ls_msg_act like line of o->messages.
     data ls_msg_exp like line of o->messages.
@@ -290,7 +286,7 @@ class ltcl_test_log implementation.
     data ls_msg_act like line of o->messages.
     data ls_msg_exp like line of o->messages.
 
-    str = repeat( val = 'A' occ = 60  ).
+    str = repeat( val = 'A' occ = 60 ).
 
     o = get_cut( ).
     o->add_str( str ).
@@ -299,8 +295,8 @@ class ltcl_test_log implementation.
     ls_msg_exp-msgid = '00'.
     ls_msg_exp-msgno = '001'.
     ls_msg_exp-msgty = 'E'.
-    ls_msg_exp-msgv1 = repeat( val = 'A' occ = 50  ).
-    ls_msg_exp-msgv2 = repeat( val = 'A' occ = 10  ).
+    ls_msg_exp-msgv1 = repeat( val = 'A' occ = 50 ).
+    ls_msg_exp-msgv2 = repeat( val = 'A' occ = 10 ).
 
     cl_abap_unit_assert=>assert_equals(
       exp = ls_msg_exp
@@ -315,7 +311,7 @@ class ltcl_test_log implementation.
     data ls_msg_exp like line of o->messages.
 
     try.
-      raise exception type lx_test.
+      raise exception type lcx_error.
     catch cx_root into lx.
     endtry.
 

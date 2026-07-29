@@ -10,8 +10,6 @@ public section.
   " SPDX-FileCopyrightText: 2013-2026 Alexander Tsybulsky
   " Project: SBCG ABAP Library (sbcglib) - https://github.com/sbcgua/sbcglib
 
-  type-pools ABAP .
-
   interfaces IF_T100_MESSAGE .
 
   types:

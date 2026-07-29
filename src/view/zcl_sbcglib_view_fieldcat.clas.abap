@@ -79,15 +79,14 @@ class zcl_sbcglib_view_fieldcat definition
         unit type lvc_s_fcat-qfieldname,
         color type lvc_s_colo,
         opts type string_table,
-      end of ty_field.
-    types:
-      tty_fields type sorted table of ty_field with unique key name
+      end of ty_field,
+      ty_fields type sorted table of ty_field with unique key name
         with non-unique sorted key by_ord components ord.
 
     constants c_no_auto_order_marker type i value -9999.
 
     data mv_auto_order_index type i.
-    data mt_fields type tty_fields.
+    data mt_fields type ty_fields.
     data mt_default_opts type string_table.
     data:
       begin of globals,
@@ -218,7 +217,8 @@ CLASS ZCL_SBCGLIB_VIEW_FIELDCAT IMPLEMENTATION.
       if <f>-ord > 0.
         cs_field-col_pos = <f>-ord.
       elseif <f>-ord < 0.
-        " this method does not see size of structure so just put negative fields to the end, which may be not 100% accurate
+        " this method does not see size of structure so just put negative fields to the end,
+        " which may be not 100% accurate
         cs_field-col_pos = 999999.
       endif.
 
@@ -372,13 +372,13 @@ CLASS ZCL_SBCGLIB_VIEW_FIELDCAT IMPLEMENTATION.
       endif.
 
       try.
-          if <f>-cur is not initial.
-            lo_column->set_currency_column( <f>-cur ).
-          endif.
-          if <f>-unit is not initial.
-            lo_column->set_quantity_column( <f>-unit ).
-          endif.
-        catch cx_salv_error ##NO_HANDLER. " Fail silently
+        if <f>-cur is not initial.
+          lo_column->set_currency_column( <f>-cur ).
+        endif.
+        if <f>-unit is not initial.
+          lo_column->set_quantity_column( <f>-unit ).
+        endif.
+      catch cx_salv_error ##NO_HANDLER. " Fail silently
       endtry.
 
       if <f>-color is not initial.
@@ -417,12 +417,12 @@ CLASS ZCL_SBCGLIB_VIEW_FIELDCAT IMPLEMENTATION.
         when 'sum'.
           if io_aggrs is bound.
             try.
-                io_aggrs->add_aggregation(
-                  columnname  = lv_colname
-                  aggregation = if_salv_c_aggregation=>total ).
-              catch cx_salv_data_error.                 "#EC NO_HANDLER
-              catch cx_salv_not_found.                  "#EC NO_HANDLER
-              catch cx_salv_existing.                   "#EC NO_HANDLER
+              io_aggrs->add_aggregation(
+                columnname  = lv_colname
+                aggregation = if_salv_c_aggregation=>total ).
+            catch cx_salv_data_error ##NO_HANDLER.
+            catch cx_salv_not_found ##NO_HANDLER.
+            catch cx_salv_existing ##NO_HANDLER.
             endtry.
           endif.
         when 'key' or 'nokey'.
@@ -606,7 +606,6 @@ CLASS ZCL_SBCGLIB_VIEW_FIELDCAT IMPLEMENTATION.
     data lo_rtype type ref to cl_abap_refdescr.
     data lo_ttype type ref to cl_abap_tabledescr.
     data lo_stype type ref to cl_abap_structdescr.
-    data lt_components type abap_component_view_tab.
 
     lo_type = cl_abap_typedescr=>describe_by_data( i_tab ).
 

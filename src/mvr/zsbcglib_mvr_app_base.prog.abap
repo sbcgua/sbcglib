@@ -17,7 +17,7 @@ class lcl_app definition.
   private section.
     data mo_data  type ref to lcl_model.
     data mo_view  type ref to zcl_sbcglib_view.
-    data mt_spool type lcl_model=>tty_spool.
+    data mt_spool type lcl_model=>ty_spool_tab.
 
     methods regenerate
       importing
@@ -51,7 +51,7 @@ class lcl_app implementation.
     case iv_cmd.
       when 'REGENERATE'.
         regenerate( io_selection ).
-      when others.
+*      when others.
 *        mo_view->on_user_command(
 *          iv_cmd = iv_cmd
 *          io_selection = io_selection ).
@@ -62,9 +62,7 @@ class lcl_app implementation.
 
     data lt_list type lcl_model=>tt_list.
 
-    mo_view->get_selected_records(
-      changing
-        ct_records =  lt_list ).
+    mo_view->get_selected_records( changing ct_records = lt_list ).
     if lines( lt_list ) = 0.
       lcx_error=>raise( 'Select at least one view to regenerate'(101) ).
     endif.

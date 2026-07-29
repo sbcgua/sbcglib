@@ -107,7 +107,7 @@ class zcl_sbcglib_view definition
         iv_line type csequence
       returning
         value(ro_self) type ref to zcl_sbcglib_view.
-    methods set_tooltip " DO NOT USE< WILL BE REFACTORED
+    methods set_tooltip " DO NOT USE WILL BE REFACTORED
       importing
         iv_value type lvc_value
         iv_type type salv_de_constant
@@ -147,7 +147,7 @@ class zcl_sbcglib_view definition
 
     methods create_alv
       importing
-        i_container	type ref to cl_gui_container optional.
+        i_container type ref to cl_gui_container optional.
 
     methods set_columns_default
       importing
@@ -660,7 +660,7 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
 
     try.
       loop at lt_fields into lv_field.
-        lv_subtotal = boolc( '*' = substring( val = lv_field len = 1 ) ).
+        lv_subtotal = boolc( substring( val = lv_field len = 1 ) = '*' ).
         if lv_subtotal = abap_true.
           lv_field = substring( val = lv_field off = 1 ).
         endif.

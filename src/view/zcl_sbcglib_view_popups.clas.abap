@@ -100,7 +100,9 @@ CLASS ZCL_SBCGLIB_VIEW_POPUPS IMPLEMENTATION.
     endif.
 
     read table lt_fields into ls_field index 1.
-    rv_value = ls_field-value.
+    if sy-subrc = 0.
+      rv_value = ls_field-value.
+    endif.
 
   endmethod.
 
@@ -191,21 +193,14 @@ CLASS ZCL_SBCGLIB_VIEW_POPUPS IMPLEMENTATION.
     data ls_selfield  type slis_selfield.
     data lt_excluding type slis_t_extab.
 
-    field-symbols <b> like line of lt_excluding.
-
-    define _exclude_button.
-      append initial line to lt_excluding assigning <b>.
-      <b>-fcode = &1.
-    end-of-definition.
-
-    " Exclude buttons
-    _exclude_button '&ETA'.
-    _exclude_button '%SC'.
-    _exclude_button '%SC+'.
-    _exclude_button '&ILT'.
-    _exclude_button '&OUP'.
-    _exclude_button '&ODN'.
-    _exclude_button '&OL0'.
+    " Exclude buttons ('fcode' is the only field of the structure, so can be appended directly)
+    append '&ETA' to lt_excluding.
+    append '%SC'  to lt_excluding.
+    append '%SC+' to lt_excluding.
+    append '&ILT' to lt_excluding.
+    append '&OUP' to lt_excluding.
+    append '&ODN' to lt_excluding.
+    append '&OL0' to lt_excluding.
 
     call function 'REUSE_ALV_POPUP_TO_SELECT'
       exporting

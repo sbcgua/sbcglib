@@ -94,7 +94,7 @@ class lcl_screen implementation.
 
   method read_screen.
 
-    data lt_d020s like table of ms_d020s.
+    data lt_d020s like standard table of ms_d020s.
 
     call function 'RS_SCREEN_LIST'
       exporting
@@ -158,16 +158,16 @@ class lcl_screen implementation.
       " If the previous conditions are met the value 'F' will be taken over
       " during de-serialization potentially overlapping other fields in the screen,
       " we set the tag to the correct value 'X'
-        if <field>-type = 'CHECK'
-            and <field>-from_dict = abap_true
-            and <field>-text is initial
-            and <field>-modific is initial.
-          <field>-modific = 'X'.
-        endif.
+      if <field>-type = 'CHECK'
+          and <field>-from_dict = abap_true
+          and <field>-text is initial
+          and <field>-modific is initial.
+        <field>-modific = 'X'.
+      endif.
 
-        if <field>-foreignkey is initial.
-          <field>-foreignkey = lc_force_off.
-        endif.
+      if <field>-foreignkey is initial.
+        <field>-foreignkey = lc_force_off.
+      endif.
 
     endloop.
 
@@ -177,6 +177,9 @@ class lcl_screen implementation.
 
     field-symbols <cont> like line of mt_containers.
     read table mt_containers assigning <cont> with key type = 'TABLE_CTRL'.
+    if sy-subrc <> 0.
+      lcx_error=>raise( |{ mv_prog }/{ mv_dynnr } table control container not found| ).
+    endif.
     <cont>-length = iv_width.
     ms_header-columns = iv_width + 1.
 
@@ -202,7 +205,7 @@ class lcl_screen implementation.
     endloop.
     if sy-subrc is initial.
       lv_tabix = sy-tabix.
-      add 1 to lv_tabix.
+      lv_tabix = lv_tabix + 1.
       insert lines of it_ins_lines into mt_flow_logic index lv_tabix.
     endif.
   endmethod.
@@ -278,14 +281,18 @@ class lcl_utils implementation.
         loop at <table> assigning <list_line>.
           append initial line to c_range assigning <range_line>.
           assign component 'SIGN' of structure <range_line> to <field>.
+          assert sy-subrc = 0.
           <field> = 'I'.
           assign component 'OPTION' of structure <range_line> to <field>.
+          assert sy-subrc = 0.
           <field> = 'EQ'.
           assign component 'LOW' of structure <range_line> to <field>.
+          assert sy-subrc = 0.
           if lv_fld_name is initial.
             <field> = <list_line>.
           else.
             assign component lv_fld_name of structure <list_line> to <src>.
+            assert sy-subrc = 0.
             <field> = <src>.
           endif.
         endloop.
@@ -299,34 +306,41 @@ class lcl_utils implementation.
 
         append initial line to c_range assigning <range_line>.
         assign component 'SIGN' of structure <range_line> to <field>.
+        assert sy-subrc = 0.
         <field> = 'I'.
         assign component 'OPTION' of structure <range_line> to <field>.
+        assert sy-subrc = 0.
         <field> = 'EQ'.
         assign component 'LOW' of structure <range_line> to <field>.
+        assert sy-subrc = 0.
         if lv_fld_name is initial.
           <field> = <list_line>.
         else.
           assign component lv_fld_name of structure <list_line> to <src>.
+          assert sy-subrc = 0.
           <field> = <src>.
         endif.
 
       when 'E'. "Data element
         append initial line to c_range assigning <range_line>.
         assign component 'SIGN' of structure <range_line> to <field>.
+        assert sy-subrc = 0.
         if i_sign is initial.
           <field> = 'I'.
         else.
           <field> = i_sign.
         endif.
         assign component 'OPTION' of structure <range_line> to <field>.
+        assert sy-subrc = 0.
         if i_option is initial.
           <field> = 'EQ'.
         else.
           <field> = i_option.
         endif.
         assign component 'LOW' of structure <range_line> to <field>.
+        assert sy-subrc = 0.
         <field> = i_data.
-     endcase.
+    endcase.
 
   endmethod.
 
