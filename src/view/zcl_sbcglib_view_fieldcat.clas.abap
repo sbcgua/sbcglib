@@ -360,7 +360,6 @@ CLASS ZCL_SBCGLIB_VIEW_FIELDCAT IMPLEMENTATION.
         endif.
 
         lo_column->set_medium_text( |{ <f>-text }| ).
-        lo_column->set_long_text( |{ <f>-text }| ).
 
       endif.
 
