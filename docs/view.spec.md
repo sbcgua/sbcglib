@@ -130,6 +130,12 @@ Methods meaning:
   - `optimize` - optimize column width
   - `reset_key` - force "key" flag reset for all the field unless `key` is specified via opts - useful when some field derive "key" flag from ddic
 
+Notes:
+
+- it is not mandatory to set texts if the field has DDIC type - the class will extract the texts from the Data element.
+- it is also not mandatory to specify all texts. If the length fits, you can only pass `t` - it will be compied to short and long texts, if they are not supplied.
+- it is not mandatory to `add` all fields - unless you have `default = hide`, all fields will be shown, so `add` only fields with some deviations from default (ordering, text, special opts).
+
 Ordering logic:
 
 - if `autoorder` is specified, the field appear in the order of adding
