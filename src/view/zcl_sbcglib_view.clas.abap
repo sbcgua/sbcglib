@@ -120,6 +120,20 @@ class zcl_sbcglib_view definition
       returning
         value(ro_self) type ref to zcl_sbcglib_view.
 
+    " Utils
+
+    class-methods get_alv_layouts
+      importing
+        i_restrict type salv_de_layout_restriction optional
+      returning
+        value(rv_layout) type disvariant-variant.
+
+    class-methods get_default_alv_layout
+      importing
+        i_restrict type salv_de_layout_restriction optional
+      returning
+        value(rv_layout) type disvariant-variant.
+
   protected section.
   private section.
 
@@ -128,6 +142,7 @@ class zcl_sbcglib_view definition
     data mi_callbacks type ref to zif_sbcglib_view_callbacks.
     data mi_cmd_handler type ref to zif_sbcglib_view_cmd_handler.
     data mv_using_data_directly type abap_bool.
+    data mo_data_type type ref to cl_abap_tabledescr.
 
     methods set_column_tech_names.
 
@@ -211,6 +226,13 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
       zcx_sbcglib_view_error=>raise( 'One and Only one of contents must be supplied' ).
     endif.
 
+    if ii_cmd_handler is bound.
+      mi_cmd_handler = ii_cmd_handler.
+    endif.
+    if ii_callbacks is bound.
+      mi_callbacks = ii_callbacks.
+    endif.
+
     if it_content_ref is not initial.
       mv_using_data_directly = abap_true.
       mr_data = it_content_ref.
@@ -226,12 +248,6 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
       set_screen_status( iv_pfstatus ).
     endif.
 
-    if ii_cmd_handler is bound.
-      mi_cmd_handler = ii_cmd_handler.
-    endif.
-    if ii_callbacks is bound.
-      mi_callbacks = ii_callbacks.
-    endif.
     set_default_handlers( ).
 
     if iv_selection_mode is not initial.
@@ -253,11 +269,21 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
       lo_stype ?= lo_ttype->get_table_line_type( ).
       lo_ttype = cl_abap_tabledescr=>create( lo_stype ). "ensure standard table
       create data mr_data type handle lo_ttype.
+      mo_data_type = lo_ttype. " Memorise table type
     endif.
 
     field-symbols <tab> type standard table.
     assign mr_data->* to <tab>.
     <tab> = it_contents.
+
+    if mi_callbacks is bound.
+      data lx type ref to cx_static_check.
+      try.
+        mi_callbacks->post_process_data_after_copy( changing ct_data = <tab> ).
+      catch cx_static_check into lx.
+        zcx_sbcglib_view_error=>raise( lx->get_text( ) ).
+      endtry.
+    endif.
 
   endmethod.
 
@@ -351,6 +377,42 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
     lo_layout->set_save_restriction( ).
 
     ro_self = me.
+
+  endmethod.
+
+
+  method get_alv_layouts.
+*   Possible options to restrict selection of ALV variants:
+*   if_salv_c_layout=>restrict_none
+*   if_salv_c_layout=>restrict_user_independant.
+*   if_salv_c_layout=>restrict_user_dependant.
+
+    data ls_layout type salv_s_layout_info.
+    data ls_key    type salv_s_layout_key.
+
+    ls_key-report = sy-cprog. " Calling program, not current program
+
+    ls_layout = cl_salv_layout_service=>f4_layouts(
+      s_key    = ls_key
+      restrict = i_restrict ).
+
+    rv_layout = ls_layout-layout.
+
+  endmethod.
+
+
+  method get_default_alv_layout.
+
+    data ls_layout type salv_s_layout_info.
+    data ls_key    type salv_s_layout_key.
+
+    ls_key-report = sy-cprog. " Calling program, not current program
+
+    ls_layout = cl_salv_layout_service=>get_default_layout(
+      s_key    = ls_key
+      restrict = i_restrict ).
+
+    rv_layout = ls_layout-layout.
 
   endmethod.
 
@@ -638,9 +700,14 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
     " see FG SALV_METADATA_STATUS
     " and it's GUI statuses SALV_TABLE_STANDARD and SALV_TABLE_STDPOPUP
 
-    mo_alv->set_screen_status(
-      pfstatus = |{ lv_pfstatus }|
-      report   = |{ lv_prog }| ).
+    data lx type ref to cx_salv_object_not_found.
+    try.
+      mo_alv->set_screen_status(
+        pfstatus = |{ lv_pfstatus }|
+        report   = |{ lv_prog }| ).
+    catch cx_salv_object_not_found into lx.
+      zcx_sbcglib_view_error=>raise( lx->get_text( ) ).
+    endtry.
 
   endmethod.
 

@@ -93,6 +93,7 @@ class zcl_sbcglib_view_fieldcat definition
         do_optimize type abap_bool,
         auto_order  type abap_bool,
         reset_key   type abap_bool,
+        techname_if_no_text type abap_bool,
       end of globals.
 
     methods validate_type_get_components
@@ -316,6 +317,7 @@ CLASS ZCL_SBCGLIB_VIEW_FIELDCAT IMPLEMENTATION.
     field-symbols <opts> like <f>-opts.
     field-symbols <o> like line of <opts>.
 
+    unassign <f>.
     read table mt_fields assigning <f> with key name = lv_colname.
     if sy-subrc = 0.
 
@@ -361,6 +363,10 @@ CLASS ZCL_SBCGLIB_VIEW_FIELDCAT IMPLEMENTATION.
 
         lo_column->set_medium_text( |{ <f>-text }| ).
 
+      elseif globals-techname_if_no_text = abap_true.
+
+        lo_column->set_medium_text( |{ lv_colname }| ).
+
       endif.
 
       if <f>-f4 is not initial.
@@ -394,6 +400,10 @@ CLASS ZCL_SBCGLIB_VIEW_FIELDCAT IMPLEMENTATION.
         lo_column->set_key( abap_false ).
       endif.
 
+      if globals-techname_if_no_text = abap_true.
+        lo_column->set_medium_text( |{ lv_colname }| ).
+      endif.
+
       assign mt_default_opts to <opts>.
     endif.
 
@@ -407,8 +417,6 @@ CLASS ZCL_SBCGLIB_VIEW_FIELDCAT IMPLEMENTATION.
           lo_column->set_icon( if_salv_c_bool_sap=>true ).
         when 'hotspot'.
           lo_column->set_cell_type( if_salv_c_cell_type=>hotspot ).
-*        when 'edit'.
-          " Salv does not support edit natively
         when 'chk' or 'checkbox'.
           lo_column->set_cell_type( if_salv_c_cell_type=>checkbox ).
         when 'no_out' or 'hide'.
@@ -524,6 +532,8 @@ CLASS ZCL_SBCGLIB_VIEW_FIELDCAT IMPLEMENTATION.
         globals-do_optimize = abap_true.
       elseif <o> = 'reset_key'.
         globals-reset_key = abap_true.
+      elseif <o> = 'techname_if_no_text'.
+        globals-techname_if_no_text = abap_true.
       elseif <o> is not initial.
         append <o> to mt_default_opts.
       endif.

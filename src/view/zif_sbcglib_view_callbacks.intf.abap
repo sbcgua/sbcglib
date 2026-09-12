@@ -20,4 +20,10 @@ interface zif_sbcglib_view_callbacks
     raising
       cx_static_check. " Passes through static checks and handles (raises message)
 
+  methods post_process_data_after_copy
+    changing
+      ct_data type standard table
+    raising
+      cx_static_check. " Passes through static checks and handles (raises message)
+
 endinterface.

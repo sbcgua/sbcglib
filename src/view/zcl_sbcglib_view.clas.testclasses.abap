@@ -102,6 +102,9 @@ class ltcl_view_demo implementation.
     io_columns->get_column( 'AMT' )->set_currency_column( 'CUR' ).
   endmethod.
 
+  method zif_sbcglib_view_callbacks~post_process_data_after_copy.
+  endmethod.
+
   method zif_sbcglib_view_cmd_handler~on_user_command.
     if iv_cmd = 'XXX'.
       message 'Secret level opened' type 'S'. " For debug only, suppressed in UTs
