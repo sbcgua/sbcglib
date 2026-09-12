@@ -12,6 +12,7 @@ class ZCL_SBCGLIB_DRILLDOWN definition
 
     types tt_bdcmsgcoll type standard table of bdcmsgcoll with default key.
 
+    " Business partners
     class-methods to_bp
       importing
         !iv_bp_number type bu_partner
@@ -19,11 +20,18 @@ class ZCL_SBCGLIB_DRILLDOWN definition
         zcx_sbcglib_error.
     class-methods to_business_partner
       importing
-        !i_bukrs type bukrs
+        !i_bukrs type bukrs optional
         !i_kunnr type kunnr optional
         !i_lifnr type lifnr optional
       raising
         zcx_sbcglib_error.
+    class-methods to_contact_person
+      importing
+        i_parnr type knvk-parnr
+      raising
+        zcx_sbcglib_error.
+
+    " Finance
     class-methods to_fi_document
       importing
         !i_bukrs type bukrs
@@ -31,6 +39,8 @@ class ZCL_SBCGLIB_DRILLDOWN definition
         !i_gjahr type gjahr
       raising
         zcx_sbcglib_error.
+
+    " Sales
     class-methods to_sd_contract
       importing
         !i_vbeln type vbeln
@@ -56,6 +66,19 @@ class ZCL_SBCGLIB_DRILLDOWN definition
         !i_knuma type knuma
       raising
         zcx_sbcglib_error.
+    class-methods to_sd_shipment
+      importing
+        i_tknum type tknum
+      raising
+        zcx_sbcglib_error.
+
+    " Material management
+    class-methods to_mm_document
+      importing
+        i_mblnr type mkpf-mblnr
+        i_mjahr type mkpf-mjahr
+      raising
+        zcx_sbcglib_error.
     class-methods to_mm_contract
       importing
         !i_ebeln type knuma
@@ -71,6 +94,8 @@ class ZCL_SBCGLIB_DRILLDOWN definition
         !i_matnr type matnr
       raising
         zcx_sbcglib_error.
+
+    " Helpers
     class-methods call_transaction_w_auth_check
       importing
         !i_tcode type clike
@@ -282,6 +307,27 @@ CLASS ZCL_SBCGLIB_DRILLDOWN IMPLEMENTATION.
   endmethod.
 
 
+  method to_contact_person.
+
+    data lt_using type ty_using_tab.
+    field-symbols <u> like line of lt_using.
+
+    if i_parnr is initial.
+      return.
+    endif.
+
+    append initial line to lt_using assigning <u>.
+    <u>-fnam = 'VPA'.
+    <u>-fval = i_parnr.
+
+    call_transaction_w_auth_check(
+      i_tcode             = 'VAP3'
+      i_skip_first_screen = abap_true
+      it_using            = lt_using ).
+
+  endmethod.
+
+
   method to_fi_document.
 
     data lt_using type ty_using_tab.
@@ -369,6 +415,25 @@ CLASS ZCL_SBCGLIB_DRILLDOWN IMPLEMENTATION.
       when others.
         return.
     endcase.
+
+  endmethod.
+
+
+  method to_mm_document.
+
+    " MIGO, maybe separate as a method, and use MB03 here
+    call function 'MIGO_DIALOG'
+      exporting
+        i_action            = 'A04'
+        i_refdoc            = 'R02'
+        i_notree            = 'X'
+        i_no_auth_check     = ' '
+        i_deadend           = 'X'
+        i_skip_first_screen = 'X'
+        i_okcode            = 'OK_GO'
+        i_mblnr             = i_mblnr
+        i_mjahr             = i_mjahr
+        i_zeile             = zif_ede_doc_mm_document=>cv_zeile.
 
   endmethod.
 
@@ -486,6 +551,27 @@ CLASS ZCL_SBCGLIB_DRILLDOWN IMPLEMENTATION.
     call_transaction_w_auth_check(
       i_skip_first_screen = abap_true
       i_tcode             = 'VBO3'
+      it_using            = lt_using ).
+
+  endmethod.
+
+
+  method to_sd_shipment.
+
+    data lt_using type ty_using_tab.
+    field-symbols <u> like line of lt_using.
+
+    if i_tknum is initial.
+      return.
+    endif.
+
+    append initial line to lt_using assigning <u>.
+    <u>-fnam = 'TNR'.
+    <u>-fval = i_tknum.
+
+    call_transaction_w_auth_check(
+      i_skip_first_screen = abap_true
+      i_tcode             = 'VT03N'
       it_using            = lt_using ).
 
   endmethod.
