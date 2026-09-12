@@ -9,6 +9,8 @@ interface zif_sbcglib_view_cmd_handler
     importing
       !iv_cmd       type salv_de_function
       !io_selection type ref to cl_salv_selections
+    returning
+      value(rv_handled) type abap_bool " for cascading handling with overrides
     raising
       cx_static_check. " Passes through static checks and handles (raises message)
 

@@ -363,7 +363,7 @@ CLASS ZCL_SBCGLIB_VIEW_FIELDCAT IMPLEMENTATION.
 
         lo_column->set_medium_text( |{ <f>-text }| ).
 
-      elseif globals-techname_if_no_text = abap_true.
+      elseif globals-techname_if_no_text = abap_true and lo_column->get_medium_text( ) is initial.
 
         lo_column->set_medium_text( |{ lv_colname }| ).
 
@@ -400,7 +400,7 @@ CLASS ZCL_SBCGLIB_VIEW_FIELDCAT IMPLEMENTATION.
         lo_column->set_key( abap_false ).
       endif.
 
-      if globals-techname_if_no_text = abap_true.
+      if globals-techname_if_no_text = abap_true and lo_column->get_medium_text( ) is initial.
         lo_column->set_medium_text( |{ lv_colname }| ).
       endif.
 

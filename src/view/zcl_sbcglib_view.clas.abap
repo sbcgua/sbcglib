@@ -18,6 +18,7 @@ class zcl_sbcglib_view definition
         it_content_ref type ref to data optional
         iv_title       type csequence default 'View'
         iv_technames   type abap_bool default abap_false
+        iv_layout      type disvariant-variant optional
         iv_pfstatus    type string optional
         ii_callbacks   type ref to zif_sbcglib_view_callbacks optional
         ii_cmd_handler type ref to zif_sbcglib_view_cmd_handler optional
@@ -32,6 +33,7 @@ class zcl_sbcglib_view definition
         it_content_ref  type ref to data optional
         iv_title        type csequence default 'View'
         iv_technames    type abap_bool default abap_false
+        iv_layout       type disvariant-variant optional
         iv_popup_width  type i default 45
         iv_popup_height type i default 10
         iv_pfstatus     type string optional
@@ -47,6 +49,7 @@ class zcl_sbcglib_view definition
         it_content_ref type ref to data optional
         iv_title       type csequence default 'View'
         iv_technames   type abap_bool default abap_false
+        iv_layout      type disvariant-variant optional
         iv_pfstatus    type string optional
         ii_callbacks   type ref to zif_sbcglib_view_callbacks optional
         ii_cmd_handler type ref to zif_sbcglib_view_cmd_handler optional
@@ -64,6 +67,11 @@ class zcl_sbcglib_view definition
     methods get_selected_records
       changing
         ct_records type standard table.
+
+    types ty_ref_table type standard table of ref to data.
+    methods get_selected_record_refs
+      changing
+        ct_record_refs type ty_ref_table.
 
     " Events
 
@@ -168,6 +176,10 @@ class zcl_sbcglib_view definition
       importing
         iv_technames type abap_bool default abap_false.
 
+    methods set_layout
+      importing
+        iv_layout type disvariant-variant optional.
+
     methods normalize_list_of_fields
       importing
         iv_fields type any
@@ -241,7 +253,7 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
     endif.
 
     create_alv( i_container ).
-
+    set_layout( iv_layout ).
     set_default_layout( |{ iv_title }| ).
 
     if iv_pfstatus is not initial.
@@ -296,6 +308,7 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
         it_content_ref = it_content_ref
         iv_title = iv_title
         iv_technames = iv_technames
+        iv_layout = iv_layout
         iv_pfstatus = iv_pfstatus
         ii_callbacks = ii_callbacks
         ii_cmd_handler = ii_cmd_handler
@@ -345,6 +358,7 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
         it_content_ref = it_content_ref
         iv_title = iv_title
         iv_technames = iv_technames
+        iv_layout = iv_layout
         iv_pfstatus = iv_pfstatus
         ii_callbacks = ii_callbacks
         ii_cmd_handler = ii_cmd_handler
@@ -442,6 +456,32 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
       read table <tab> assigning <rec> index ls_row.
       if sy-subrc = 0.
         append <rec> to ct_records.
+      endif.
+    endloop.
+
+  endmethod.
+
+
+  method get_selected_record_refs.
+
+    data lo_selections type ref to cl_salv_selections.
+    data lt_rows       type salv_t_row.
+    data ls_row        like line of lt_rows.
+
+    field-symbols <tab> type standard table.
+    data lr_rec type ref to data.
+
+    clear ct_record_refs.
+
+    lo_selections = mo_alv->get_selections( ).
+    lt_rows = lo_selections->get_selected_rows( ).
+
+    assign mr_data->* to <tab>.
+
+    loop at lt_rows into ls_row.
+      read table <tab> reference into lr_rec index ls_row.
+      if sy-subrc = 0.
+        append lr_rec to ct_record_refs.
       endif.
     endloop.
 
@@ -550,6 +590,7 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
 
   method refresh.
     mo_alv->refresh( ).
+*    cl_gui_cfw=>flush( ).
   endmethod.
 
 
@@ -681,6 +722,25 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
     lo_display = mo_alv->get_display_settings( ).
     lo_display->set_striped_pattern( abap_true ).
     lo_display->set_list_header( iv_title ).
+
+  endmethod.
+
+
+  method set_layout.
+
+    data lo_layout  type ref to cl_salv_layout.
+    data ls_variant type slis_vari.
+    data ls_key     type salv_s_layout_key.
+
+    lo_layout = mo_alv->get_layout( ).
+    ls_key-report = sy-cprog.
+    lo_layout->set_key( ls_key ).
+    lo_layout->set_default( abap_true ).
+    lo_layout->set_save_restriction( if_salv_c_layout=>restrict_none ).
+
+    if iv_layout is not initial.
+      lo_layout->set_initial_layout( iv_layout ).
+    endif.
 
   endmethod.
 
