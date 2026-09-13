@@ -72,6 +72,9 @@ class zcl_sbcglib_view definition
     methods get_selected_record_refs
       changing
         ct_record_refs type ty_ref_table.
+    methods get_selected_records_keys
+      changing
+        ct_record_keys type standard table.
 
     " Events
 
@@ -456,6 +459,34 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
       read table <tab> assigning <rec> index ls_row.
       if sy-subrc = 0.
         append <rec> to ct_records.
+      endif.
+    endloop.
+
+  endmethod.
+
+
+  method get_selected_records_keys.
+
+    data lo_selections type ref to cl_salv_selections.
+    data lt_rows       type salv_t_row.
+    data ls_row        like line of lt_rows.
+
+    field-symbols <srctab> type standard table.
+    field-symbols <srcrec> type any.
+    field-symbols <dstrec> type any.
+
+    clear ct_record_keys.
+
+    lo_selections = mo_alv->get_selections( ).
+    lt_rows = lo_selections->get_selected_rows( ).
+
+    assign mr_data->* to <srctab>.
+
+    loop at lt_rows into ls_row.
+      read table <srctab> assigning <srcrec> index ls_row.
+      if sy-subrc = 0.
+        append initial line to ct_record_keys assigning <dstrec>.
+        move-corresponding <srcrec> to <dstrec>.
       endif.
     endloop.
 
