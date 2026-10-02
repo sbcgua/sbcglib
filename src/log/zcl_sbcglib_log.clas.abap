@@ -9,6 +9,8 @@ class zcl_sbcglib_log definition
     " SPDX-FileCopyrightText: 2013-2026 Alexander Tsybulsky
     " Project: SBCG ABAP Library (sbcglib) - https://github.com/sbcgua/sbcglib
 
+    constants c_free_text_msgid type symsgid value '00'.
+    constants c_free_text_msgno type symsgno value '001'.
 
     interfaces zif_sbcglib_log.
 
@@ -29,9 +31,6 @@ class zcl_sbcglib_log definition
 
     aliases messages for zif_sbcglib_log~messages.
     aliases addm for zif_sbcglib_log~addm.
-
-    constants c_free_text_msgid type symsgid value '00'.
-    constants c_free_text_msgno type symsgno value '001'.
 
     data mv_default_msgid type msgid.
 
@@ -111,6 +110,7 @@ CLASS ZCL_SBCGLIB_LOG IMPLEMENTATION.
     ls_msg_log-msgv2 = v2.
     ls_msg_log-msgv3 = v3.
     ls_msg_log-msgv4 = v4.
+    ls_msg_log-ref   = ref.
     ls_msg_log-index = index.
 
     if ls_msg_log-msgid is initial.
@@ -130,6 +130,8 @@ CLASS ZCL_SBCGLIB_LOG IMPLEMENTATION.
 
     zif_sbcglib_log~add_str(
       ty = ty
+      index = index
+      ref = ref
       msg = ex->get_text( ) ).
 
   endmethod.
@@ -161,6 +163,8 @@ CLASS ZCL_SBCGLIB_LOG IMPLEMENTATION.
       v2 = sy-msgv2
       v3 = sy-msgv3
       v4 = sy-msgv4
+      index = index
+      ref = ref
       first = first ).
 
   endmethod.
@@ -176,6 +180,7 @@ CLASS ZCL_SBCGLIB_LOG IMPLEMENTATION.
       v2 = is_rec-msgv2
       v3 = is_rec-msgv3
       v4 = is_rec-msgv4
+      ref = is_rec-ref
       index = is_rec-index ).
 
   endmethod.
@@ -195,11 +200,17 @@ CLASS ZCL_SBCGLIB_LOG IMPLEMENTATION.
     lv_char_msg = msg.
     ls_v = lv_char_msg.
 
+    if mv_default_msgid is initial.
+      mv_default_msgid = c_free_text_msgid.
+      " To hide message if from view in case of string only log
+    endif.
+
     addm(
       ty = ty
       id = c_free_text_msgid
       no = c_free_text_msgno
       index = index
+      ref = ref
       v1 = ls_v-v1
       v2 = ls_v-v2
       v3 = ls_v-v3
@@ -233,7 +244,7 @@ CLASS ZCL_SBCGLIB_LOG IMPLEMENTATION.
 
 
   method zif_sbcglib_log~e.
-    addm( id = id ty = 'E' no = no v1 = v1 v2 = v2 v3 = v3 v4 = v4 index = index ).
+    addm( id = id ty = 'E' no = no v1 = v1 v2 = v2 v3 = v3 v4 = v4 index = index ref = ref ).
   endmethod.
 
 
@@ -355,7 +366,7 @@ CLASS ZCL_SBCGLIB_LOG IMPLEMENTATION.
 
 
   method zif_sbcglib_log~s.
-    addm( id = id ty = 'S' no = no v1 = v1 v2 = v2 v3 = v3 v4 = v4 index = index ).
+    addm( id = id ty = 'S' no = no v1 = v1 v2 = v2 v3 = v3 v4 = v4 index = index ref = ref ).
   endmethod.
 
 
@@ -376,6 +387,6 @@ CLASS ZCL_SBCGLIB_LOG IMPLEMENTATION.
 
 
   method zif_sbcglib_log~w.
-    addm( id = id ty = 'W' no = no v1 = v1 v2 = v2 v3 = v3 v4 = v4 index = index ).
+    addm( id = id ty = 'W' no = no v1 = v1 v2 = v2 v3 = v3 v4 = v4 index = index ref = ref ).
   endmethod.
 ENDCLASS.

@@ -31,6 +31,12 @@
      <ENTRY>Message</ENTRY>
      <LENGTH>20</LENGTH>
     </item>
+    <item>
+     <ID>I</ID>
+     <KEY>004</KEY>
+     <ENTRY>Ref</ENTRY>
+     <LENGTH>20</LENGTH>
+    </item>
    </TPOOL>
   </asx:values>
  </asx:abap>

@@ -28,6 +28,7 @@ class ltcl_test_log definition
     methods size_and_clear for testing.
     methods add_str for testing.
     methods addx for testing.
+    methods refs for testing.
 
     methods add_and_size for testing.
     methods log_highest_msg_type for testing.
@@ -386,6 +387,33 @@ class ltcl_test_log implementation.
     cl_abap_unit_assert=>assert_equals(
       exp = zif_sbcglib_log=>c_severity-error
       act = li_log->log_severity( ) ).
+
+  endmethod.
+
+  method refs.
+
+    data ls_msg_act like line of o->messages.
+    data ls_msg_exp like line of o->messages.
+    data l_string type string.
+
+    o = get_cut( ).
+
+    clear ls_msg_exp.
+    l_string  = 'Error description'.
+    ls_msg_exp-msgty = 'E'.
+    ls_msg_exp-msgid = '00'.
+    ls_msg_exp-msgno = '001'.
+    ls_msg_exp-msgv1 = 'Error description'.
+    ls_msg_exp-index = 2.
+    ls_msg_exp-ref   = 'ref1'.
+
+    o->add_str( msg = l_string index = 2 ref = 'ref1' ).
+    read table o->messages into ls_msg_act index 1.
+    cl_abap_unit_assert=>assert_equals(
+      exp = ls_msg_exp
+      act = ls_msg_act ).
+
+    " TODO more
 
   endmethod.
 

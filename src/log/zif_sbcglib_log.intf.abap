@@ -7,6 +7,8 @@ interface zif_sbcglib_log
 
   " TYPES
 
+  types ty_ref type c length 20.
+
   types:
     begin of ty_message,
       msgid type symsgid,
@@ -17,6 +19,7 @@ interface zif_sbcglib_log
       msgv3 type symsgv,
       msgv4 type symsgv,
       index type i,
+      ref   type ty_ref,
     end of ty_message.
   types tt_messages type standard table of ty_message with key msgid msgno.
 
@@ -54,6 +57,7 @@ interface zif_sbcglib_log
       v3 type clike optional
       v4 type clike optional
       index type i optional
+      ref type ty_ref optional
       first type abap_bool default abap_false.
 
   methods add_rec
@@ -64,11 +68,14 @@ interface zif_sbcglib_log
     importing
       msg type string
       index type i optional
+      ref type ty_ref optional
       ty type symsgty default 'E'.
 
   methods addx
     importing
       ex type ref to if_message
+      index type i optional
+      ref type ty_ref optional
       ty type symsgty default 'E'.
 
   methods add_bdcmsgcoll
@@ -81,36 +88,41 @@ interface zif_sbcglib_log
 
   methods add_if_t100_msg
     importing
-      !ex type ref to if_t100_message
-      !ty type symsgty default 'E'
-      !first type abap_bool default abap_false.
+      ex type ref to if_t100_message
+      ty type symsgty default 'E'
+      index type i optional
+      ref type ty_ref optional
+      first type abap_bool default abap_false.
 
   methods w
     importing
-      !id type symsgid optional
-      !no type symsgno
-      !v1 type clike optional
-      !v2 type clike optional
-      !v3 type clike optional
-      !v4 type clike optional
+      id type symsgid optional
+      no type symsgno
+      v1 type clike optional
+      v2 type clike optional
+      v3 type clike optional
+      v4 type clike optional
+      ref type ty_ref optional
       index type i optional.
   methods e
     importing
-      !id type symsgid optional
-      !no type symsgno
-      !v1 type clike optional
-      !v2 type clike optional
-      !v3 type clike optional
-      !v4 type clike optional
+      id type symsgid optional
+      no type symsgno
+      v1 type clike optional
+      v2 type clike optional
+      v3 type clike optional
+      v4 type clike optional
+      ref type ty_ref optional
       index type i optional.
   methods s
     importing
-      !id type symsgid optional
-      !no type symsgno
-      !v1 type clike optional
-      !v2 type clike optional
-      !v3 type clike optional
-      !v4 type clike optional
+      id type symsgid optional
+      no type symsgno
+      v1 type clike optional
+      v2 type clike optional
+      v3 type clike optional
+      v4 type clike optional
+      ref type ty_ref optional
       index type i optional.
 
   " SELECTORS

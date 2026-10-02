@@ -38,6 +38,7 @@ class ltcl_test_log implementation.
 
     "different types of message
     li_log->add_str( 'Hello' ).
+    li_log->add_str( msg = 'Hello' ref = 'with ref' ).
     li_log->e(
       no = '000'
       v1 = 'Test'

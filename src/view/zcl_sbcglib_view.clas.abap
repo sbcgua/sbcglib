@@ -19,6 +19,7 @@ class zcl_sbcglib_view definition
         iv_title       type csequence default 'View'
         iv_technames   type abap_bool default abap_false
         iv_layout      type disvariant-variant optional
+        iv_layout_handle type salv_s_layout_key-handle optional
         iv_pfstatus    type string optional
         ii_callbacks   type ref to zif_sbcglib_view_callbacks optional
         ii_cmd_handler type ref to zif_sbcglib_view_cmd_handler optional
@@ -34,6 +35,7 @@ class zcl_sbcglib_view definition
         iv_title        type csequence default 'View'
         iv_technames    type abap_bool default abap_false
         iv_layout       type disvariant-variant optional
+        iv_layout_handle type salv_s_layout_key-handle optional
         iv_popup_width  type i default 45
         iv_popup_height type i default 10
         iv_pfstatus     type string optional
@@ -50,6 +52,7 @@ class zcl_sbcglib_view definition
         iv_title       type csequence default 'View'
         iv_technames   type abap_bool default abap_false
         iv_layout      type disvariant-variant optional
+        iv_layout_handle type salv_s_layout_key-handle optional
         iv_pfstatus    type string optional
         ii_callbacks   type ref to zif_sbcglib_view_callbacks optional
         ii_cmd_handler type ref to zif_sbcglib_view_cmd_handler optional
@@ -181,7 +184,8 @@ class zcl_sbcglib_view definition
 
     methods set_layout
       importing
-        iv_layout type disvariant-variant optional.
+        iv_layout type disvariant-variant optional
+        iv_layout_handle type salv_s_layout_key-handle optional.
 
     methods normalize_list_of_fields
       importing
@@ -256,7 +260,9 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
     endif.
 
     create_alv( i_container ).
-    set_layout( iv_layout ).
+    set_layout(
+      iv_layout = iv_layout
+      iv_layout_handle = iv_layout_handle ).
     set_default_layout( |{ iv_title }| ).
 
     if iv_pfstatus is not initial.
@@ -312,6 +318,7 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
         iv_title = iv_title
         iv_technames = iv_technames
         iv_layout = iv_layout
+        iv_layout_handle = iv_layout_handle
         iv_pfstatus = iv_pfstatus
         ii_callbacks = ii_callbacks
         ii_cmd_handler = ii_cmd_handler
@@ -362,6 +369,7 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
         iv_title = iv_title
         iv_technames = iv_technames
         iv_layout = iv_layout
+        iv_layout_handle = iv_layout_handle
         iv_pfstatus = iv_pfstatus
         ii_callbacks = ii_callbacks
         ii_cmd_handler = ii_cmd_handler
@@ -377,6 +385,20 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
 
 
   method display.
+
+    data lo_cols type ref to cl_salv_columns_table.
+    data lt_cols type salv_t_column_ref.
+    field-symbols <c> like line of lt_cols.
+
+    lo_cols = mo_alv->get_columns( ).
+    lo_cols->get( ).
+
+    loop at lt_cols assigning <c>.
+      data vis type abap_bool.
+      vis = <c>-r_column->is_visible( ).
+    endloop.
+
+
     mo_alv->display( ).
   endmethod.
 
@@ -765,6 +787,7 @@ CLASS ZCL_SBCGLIB_VIEW IMPLEMENTATION.
 
     lo_layout = mo_alv->get_layout( ).
     ls_key-report = sy-cprog.
+    ls_key-handle = iv_layout_handle.
     lo_layout->set_key( ls_key ).
     lo_layout->set_default( abap_true ).
     lo_layout->set_save_restriction( if_salv_c_layout=>restrict_none ).

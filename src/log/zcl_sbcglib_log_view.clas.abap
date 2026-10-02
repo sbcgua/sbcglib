@@ -37,6 +37,7 @@ class zcl_sbcglib_log_view definition
         msgid    type zif_sbcglib_log=>ty_message-msgid,
         msgno    type zif_sbcglib_log=>ty_message-msgno,
         index    type zif_sbcglib_log=>ty_message-index,
+        ref      type zif_sbcglib_log=>ty_message-ref,
         msg_text type c length 100, " ?
       end of ty_log.
 
@@ -107,6 +108,7 @@ CLASS ZCL_SBCGLIB_LOG_VIEW IMPLEMENTATION.
 *        importing
 *          message_text_output  = lv_text.
 
+      clear lv_text.
       message id <m>-msgid type 'I' number <m>-msgno into lv_text
         with <m>-msgv1 <m>-msgv2 <m>-msgv3 <m>-msgv4.
 
@@ -151,6 +153,8 @@ CLASS ZCL_SBCGLIB_LOG_VIEW IMPLEMENTATION.
 
     data lv_external_msgid_found type abap_bool.
     data lv_index_found type abap_bool.
+    data lv_ref_found type abap_bool.
+    data lv_strings_only type abap_bool value abap_true.
     field-symbols <m> like line of it_log_table.
 
     append 'msgty' to rt_hidden_fields. " Because of icon
@@ -165,6 +169,15 @@ CLASS ZCL_SBCGLIB_LOG_VIEW IMPLEMENTATION.
         lv_index_found = abap_true.
       endif.
 
+      if <m>-ref is not initial.
+        lv_ref_found = abap_true.
+      endif.
+
+      if lv_strings_only = abap_true and
+        ( <m>-msgid <> zcl_sbcglib_log=>c_free_text_msgid or <m>-msgno <> zcl_sbcglib_log=>c_free_text_msgno ).
+        lv_strings_only = abap_false.
+      endif.
+
     endloop.
 
     if lv_external_msgid_found = abap_false.
@@ -173,6 +186,14 @@ CLASS ZCL_SBCGLIB_LOG_VIEW IMPLEMENTATION.
 
     if lv_index_found = abap_false.
       append 'index' to rt_hidden_fields.
+    endif.
+
+    if lv_ref_found = abap_false.
+      append 'ref' to rt_hidden_fields.
+    endif.
+
+    if lv_strings_only = abap_true.
+      append 'msgno' to rt_hidden_fields.
     endif.
 
   endmethod.
@@ -204,12 +225,17 @@ CLASS ZCL_SBCGLIB_LOG_VIEW IMPLEMENTATION.
   endmethod.
 
 
+  method zif_sbcglib_view_callbacks~post_process_data_after_copy.
+  endmethod.
+
+
   method zif_sbcglib_view_callbacks~setup_columns.
 
     data lo_col type ref to cl_salv_column.
     data lv_icon_name type string.
 
-    lv_icon_name = repeat( val = cl_abap_conv_in_ce=>uccp( '00A0' ) occ = 6 ). " Non-breakable space (overkill?)
+    lv_icon_name = repeat( val = cl_abap_conv_in_ce=>uccp( '00A0' ) occ = 2 ) " Non-breakable space (overkill?)
+      && `!` && repeat( val = cl_abap_conv_in_ce=>uccp( '00A0' ) occ = 2 ).
 
     lo_col = io_columns->get_column( 'ICON' ).
     lo_col->set_alignment( if_salv_c_alignment=>centered ).
@@ -225,6 +251,10 @@ CLASS ZCL_SBCGLIB_LOG_VIEW IMPLEMENTATION.
     lo_col->set_short_text( '#' ).
     lo_col->set_medium_text( '#' ).
 
+    lo_col = io_columns->get_column( 'REF' ).
+    lo_col->set_short_text( |{ 'Ref'(004) }| ).
+    lo_col->set_medium_text( |{ 'Ref'(004) }| ).
+
   endmethod.
 
 
@@ -237,11 +267,12 @@ CLASS ZCL_SBCGLIB_LOG_VIEW IMPLEMENTATION.
       it_content   = lt_log_list
       iv_title     = mv_title
       ii_callbacks = me
+      iv_layout_handle = 'LOG'
       iv_popup_width  = 100
       iv_popup_height = 25
 *      iv_pfstatus = '..._UNBOUND_DIALOGS/LOG_VIEW_DIALOG' " TODO !
       )->hide_fields( get_fields_to_hide(
-        it_log_table = lt_log_list
+        it_log_table     = lt_log_list
         iv_default_msgid = ii_log->default_msgid( ) )
       )->display( ).
 
